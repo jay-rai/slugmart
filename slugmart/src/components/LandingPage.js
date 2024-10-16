@@ -27,6 +27,7 @@ function LandingPage() {
         setUser(user);
       } else {
         console.log('User not from ucsc');
+        navigate('/bad-email');
       }
     } catch (error) {
       console.error('Error Signing in: ', error);

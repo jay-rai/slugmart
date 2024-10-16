@@ -1,0 +1,36 @@
+.bad-email-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #FFFBEA; /* Same off-white background for consistency */
+}
+
+.bad-email-container h1 {
+    font-size: 2.5rem;
+    color: #d9534f; /* Red color to indicate restriction */
+    margin-bottom: 1rem;
+}
+
+.bad-email-container p {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #f8b600e2; /* Banana slug yellow */
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #ffd900c1; /* Slightly darker yellow on hover */
+}

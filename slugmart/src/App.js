@@ -7,6 +7,7 @@ import { ProviderId } from 'firebase/auth';
 import { doc, setDoc} from 'firebase/firestore';
 import LandingPage from './components/LandingPage';
 import AccountPage from './components/AccountPage';
+import BadEmailPage from './components/BadEmailPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path='' element={<LandingPage />}></Route>
           <Route path='/account' element={<AccountPage />}></Route>
+          <Route path="/bad-email" element={<BadEmailPage />} />
         </Routes>
       </Router>
 );
