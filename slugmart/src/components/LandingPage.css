@@ -34,7 +34,11 @@ body, html {
     margin: 12rem auto;
     width: 30rem;
     height: 15rem;
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   
 .landing-content h1 {
@@ -43,7 +47,6 @@ body, html {
 }
 
 .banana-slug-button {
-    display: inline-block;
     padding: 15px 30px;
     font-size: 1.5rem;
     color: #fff;
@@ -57,6 +60,12 @@ body, html {
 
 .banana-slug-button:hover {
     background-color: #ffd900c1; /* Slightly darker yellow on hover */
+}
+
+.ucsc-warning {
+  padding-bottom: 20px;
+  color: #fff;
+  font-size: 10px;
 }
 
 .flex-container {
@@ -91,10 +100,4 @@ body, html {
 .flex-box p {
     font-size: 1rem;
     color: #555;
-}
-
-.ucsc-warning {
-    padding-bottom: 20px;
-    color: #fff;
-    font-size: 10px;
 }
