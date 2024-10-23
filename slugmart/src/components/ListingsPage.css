@@ -1,0 +1,195 @@
+.browse-container {
+    padding: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.listing-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.listing-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+h3 {
+    margin-top: 10px;
+}
+
+/* Container for the entire add listing page */
+.add-listing-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Left side: square button with a plus sign */
+.plus-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plus-button {
+    width: 150px;
+    height: 150px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, background-image 0.3s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.plus-button:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+/* Right side: form container */
+.add-listing-form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Condition buttons */
+.condition-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.condition-btn {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.condition-btn.active {
+    background-color: #f8b400;
+    color: white;
+    border: none;
+}
+
+.condition-btn:hover {
+    background-color: #f8b400;
+    color: white;
+}
+
+/* Post button */
+.post-button {
+    background-color: #f8b400;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post-button:hover {
+    background-color: #ffd700;
+}
+
+.post-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.listing-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .action-button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-button.sold {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .action-button.remove {
+    background-color: #FF6347;
+    color: white;
+  }
+  
+  .action-button.edit {
+    background-color: #f8b400;
+    color: white;
+  }
+  
+  .action-button:hover {
+    background-color: #ddd;
+  }
+  
+  .action-button.sold:hover {
+    background-color: #45a049;
+  }
+  
+  .action-button.remove:hover {
+    background-color: #e74c3c;
+  }
+  
+  .action-button.edit:hover {
+    background-color: #ffd700;
+  }
+  
+  .listing-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .listing-card {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }

@@ -14,7 +14,7 @@ function Navbar({ handleLogout }) {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink to="/sell" className="nav-item">
+                    <NavLink to="/add-listing" className="nav-item">
                         Sell
                     </NavLink>
                 </li>

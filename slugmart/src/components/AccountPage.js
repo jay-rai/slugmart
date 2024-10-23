@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { signOut } from 'firebase/auth';
 import { auth, db } from '../config/firebase-config';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
+import { handleLogout } from '../authUtil/logOut';
 import Navbar from './Navbar';
 import './AccountPage.css';
 
@@ -10,7 +10,8 @@ function AccountPage(){
 
     const [user, setUser] = useState(null);
     const [location, setLocation] = useState('');
-    const [looading, setLoading] = useState(true);
+    const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     // fetch data from datbase
@@ -24,29 +25,28 @@ function AccountPage(){
         setLoading(false);
     }
 
+    const fetchUserListings = async (uid) => {
+        const listingsCollection = collection(db, 'listings');
+        const q = query(listingsCollection, where('ownerId', '==', uid)); // Query where ownerId matches user's uid
+        const querySnapshot = await getDocs(q);
+        const userListings = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setListings(userListings);
+    };
+
     useEffect(() => {
         const listener = auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
                 setUser(authUser);
                 await fetchUserData(authUser.uid);
+                await fetchUserListings(authUser.uid); // Fetch user's listings after login
+                setLoading(false);
             } else {
-                navigate('/')
+                navigate('/');
             }
         });
         return () => listener();
-
     }, [navigate]);
 
-    // logging user out
-    const handleLogout = async () => {
-        try{
-            await signOut(auth)
-            console.log("User signed out");
-            navigate('/');
-        } catch (error) {
-            console.log("error logging out:", error);
-        }
-    }
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -57,45 +57,104 @@ function AccountPage(){
         } catch (error) {
             console.error("error updating profile", error)
         }
+    
     }
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
+    const handleMarkAsSold = async (listingId) => {
+        try {
+            const listingRef = doc(db, 'listings', listingId);
+            await updateDoc(listingRef, { status: 'sold' });
+            alert('Listing marked as sold!');
+            await fetchUserListings(user.uid);
+        } catch (error) {
+            console.error("Error marking listing as sold", error);
+        }
+    };
+
+    const handleRemoveListing = async (listingId) => {
+        try {
+            const listingRef = doc(db, 'listings', listingId);
+            await deleteDoc(listingRef);
+            alert('Listing removed!');
+            await fetchUserListings(user.uid);
+        } catch (error) {
+            console.error("Error removing listing", error);
+        }
+    };
+
+    const handleEditListing = (listingId) => {
+        navigate(`/edit-listing/${listingId}`);
+    };
 
     return (
         <div>
-            <Navbar handleLogout={handleLogout} /> {/* Navbar with logout */}
-        <div className="account-container">
-            <h1>Your Account</h1>
-            <div className="profile-section">
-            {/* Display user image, name, and email */}
-            {user && (
-                <>
-                <img
-                    src={user.photoURL}
-                    alt="Profile"
-                    className="profile-image"
-                />
-                <h2>{user.displayName}</h2>
-                <p>{user.email}</p>
-                <p>{location}</p>
-                </>
-            )}
+            <Navbar handleLogout={handleLogout} />
+            <div className="account-container">
+                <h1>Your Account</h1>
+                <div className="profile-section">
+                    {user && (
+                        <>
+                            <img
+                                src={user.photoURL}
+                                alt="Profile"
+                                className="profile-image"
+                            />
+                            <h2>{user.displayName}</h2>
+                            <p>{user.email}</p>
+                            <p>{location}</p>
+                        </>
+                    )}
+                </div>
+                <form onSubmit={handleFormSubmit} className="profile-form">
+                    <div className="form-group">
+                        <label htmlFor="location">Location</label>
+                        <input
+                            type="text"
+                            id="location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            placeholder="Where are you located? (College Name/Off Campus)"
+                            className="form-input"
+                        />
+                    </div>
+                    <button type="submit" className="submit-button">
+                        Save Changes
+                    </button>
+                </form>
+
+                <h2>Your Listings</h2>
+                <div className="listings-grid">
+                    {listings.length > 0 ? (
+                        listings.map(listing => (
+                            <div key={listing.id} className="listing-card">
+                                <img src={listing.images[0]} alt={listing.title} className="listing-image" />
+                                <h3>{listing.title}</h3>
+                                <p>{listing.description}</p>
+                                <p><strong>Price:</strong> ${listing.price}</p>
+                                <p><strong>Status:</strong> {listing.status || 'available'}</p>
+                                
+                                <div className="listing-actions">
+                                    <button onClick={() => handleMarkAsSold(listing.id)} className="action-button sold">
+                                        Mark as Sold
+                                    </button>
+                                    <button onClick={() => handleRemoveListing(listing.id)} className="action-button remove">
+                                        Remove
+                                    </button>
+                                    <button onClick={() => handleEditListing(listing.id)} className="action-button edit">
+                                        Edit Listing
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p>You have no listings yet.</p>
+                    )}
+                </div>
             </div>
-            <form onSubmit={handleFormSubmit} className="profile-form">
-            <div className="form-group">
-                <label htmlFor="location">Location</label>
-                <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Where are you located? (College Name/Off Campus)"
-                className="form-input"
-                />
-            </div>
-            <button type="submit" className="submit-button">
-                Save Changes
-            </button>
-            </form>
-        </div>
         </div>
     );
 
