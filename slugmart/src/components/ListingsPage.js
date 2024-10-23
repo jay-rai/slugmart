@@ -3,10 +3,11 @@ import { db } from "../config/firebase-config";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ListingsPage.css';
 function ListingsPage() {
 
+    const navigate = useNavigate();
     const [listings, setListings] = useState([]);
     // states for searching
     const [searchQuery, setSearchQuery] = useState('');
@@ -45,7 +46,7 @@ function ListingsPage() {
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout} />
+      <Navbar handleLogout={handleLogout(navigate)} />
       <div className="browse-container">
         <h1>Browse Listings</h1>
         <div className="search-bar">

@@ -92,7 +92,7 @@ function AccountPage(){
 
     return (
         <div>
-            <Navbar handleLogout={handleLogout} />
+            <Navbar handleLogout={handleLogout(navigate)} />
             <div className="account-container">
                 <h1>Your Account</h1>
                 <div className="profile-section">

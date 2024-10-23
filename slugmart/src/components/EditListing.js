@@ -100,7 +100,7 @@ function EditListing(){
 
     return (
         <div>
-        <Navbar handleLogout={handleLogout}/>
+        <Navbar handleLogout={handleLogout(navigate)}/>
         <div className="edit-listing-container">
             <h1>Edit Listing</h1>
             <form onSubmit={handleUpdateListing}>

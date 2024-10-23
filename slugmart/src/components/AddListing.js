@@ -5,6 +5,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './ListingsPage.css';
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
+import { useNavigate } from 'react-router-dom';
 
 function AddListing() {
 
@@ -16,6 +17,8 @@ function AddListing() {
         const [uploading, setUploading] = useState(false);
         // CONDITION IS LIKE NEW USED OTHER
         const [condition, setCondition] = useState('');
+
+        const navigate = useNavigate();
 
         const handleListingSubmit = async (e) => {
             e.preventDefault();
@@ -77,7 +80,7 @@ function AddListing() {
         
           return (
             <div>
-              <Navbar />
+              <Navbar handleLogout={handleLogout(navigate)}/>
               <div className="add-listing-container">
                 <div className="plus-button-container" onClick={handleImageClick}>
                   <div className="plus-button" style={{ backgroundImage: imagePreview ? `url(${imagePreview})` : 'none' }}>
