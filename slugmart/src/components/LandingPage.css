@@ -1,104 +1,120 @@
-/* Global styles */
-body, html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-  }
-  
-.landing-container {
-    display: flex;
-    height: 100vh;
-    background-color: #FFFBEA; /* Off-white cream background */
-    background-size: cover;
-    background-position: center;
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  overflow: hidden;
 }
-  
-  
-  /* Medium desktop */
-  @media (min-width: 768px) {
-    .landing-container {
-      background-image: url('../images/slugmartBIG.jpg');
-    }
+
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #fffbea;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+  flex-direction: column;
+  background-image: url("../images/slugmartBIG.jpg");
+}
+
+.landing-container:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+@media (min-width: 768px) {
+  .landing-container {
+    flex-direction: row;
   }
-  
-  /* Large desktop */
-  @media (min-width: 1200px) {
-    .landing-container {
-      background-image: url('../images/slugmartBIG.jpg');
-    }
+}
+
+@media (min-width: 1200px) {
+  .landing-container {
+    flex-direction: row;
   }
-  
-  /* Content inside the left third */
+}
+
 .landing-content {
-    background-color: rgba(0, 0, 0, 0.4);
-    margin: 12rem auto;
-    width: 30rem;
-    height: 15rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
+  width: 30rem;
+  height: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 10;
+  margin: 20px;
+}
+
 .landing-content h1 {
-    font-size: 2.5rem;
-    color: #f7f7f7; /* Yellow color for the text */
+  font-size: 2.5rem;
+  color: #1877f2;
 }
 
 .banana-slug-button {
-    display: inline-block;
-    padding: 15px 30px;
-    font-size: 1.5rem;
-    color: #fff;
-    background-color: #f8b600e2; /* Banana slug yellow */
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  color: #fff;
+  background-color: #1877f2;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
 .banana-slug-button:hover {
-    background-color: #ffd900c1; /* Slightly darker yellow on hover */
+  background-color: #165bb2;
 }
 
 .ucsc-warning {
   padding-bottom: 20px;
-  color: #fff;
+  color: #ff0000;
   font-size: 10px;
 }
 
 .flex-container {
-    display: flexbox;
-    justify-content: space-around; /* Space the boxes evenly */
-    padding: 0 5%; /* Add padding to keep it aligned within the window */
-    height: 100vh;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
-  
-.flex-box {
-    width: 35%;
-    height: 25%;
-    background-color: rgba(255, 255, 255, 0.9); /* Light background for boxes */
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 15px;
+
+.fb-logo {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 15px;
+  margin: 20px;
+  color: #1877f2;
 }
 
 .flex-box i {
-    font-size: 2.5rem; /* Adjust the icon size */
-    color: #f8b400; /* Banana slug yellow color for icons */
-    margin-bottom: 5px;
+  font-size: 2.5rem;
+  color: #f8b400;
+  margin-bottom: 5px;
 }
 
 .flex-box h3 {
-    font-size: 1.5rem;
-    color: #333;
+  font-size: 1.5rem;
+  color: #1877f2;
 }
 
 .flex-box p {
-    font-size: 1rem;
-    color: #555;
+  font-size: 1rem;
+  color: #1877f2;
 }
