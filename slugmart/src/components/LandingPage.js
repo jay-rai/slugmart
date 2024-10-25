@@ -24,6 +24,7 @@ function LandingPage() {
         setUser(user);
       } else {
         console.log("User not from ucsc");
+        navigate("/bad-email");
       }
     } catch (error) {
       console.error("Error Signing in: ", error);
@@ -53,11 +54,8 @@ function LandingPage() {
       }
     });
 
-    // Disable scrolling for landing page
     document.body.classList.add("no-scroll");
-
     return () => {
-      // Enable scrolling again when component is unmounted
       document.body.classList.remove("no-scroll");
       listener();
     };
