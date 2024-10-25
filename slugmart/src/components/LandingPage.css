@@ -1,8 +1,12 @@
+/* LandingPage.css */
 body,
 html {
   height: 100%;
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.no-scroll {
   overflow: hidden;
 }
 
