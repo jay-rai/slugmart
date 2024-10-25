@@ -1,56 +1,132 @@
-.navbar {
-    background-color: #2b2a29ab; /* Banana slug yellow */
-    padding: 10px 15px;
-    display: flex;
-    justify-content: right;
-    align-items: right;
-    position: sticky; /* Sticks to the top on scroll */
-    top: 0;
-    z-index: 1000; /* Ensures it stays above other elements */
+/* Navbar.css */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-  
-/* Navbar links */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #1877f2;
+  color: #fff;
+}
+
+.logo img {
+  height: 80px;
+  margin-right: 15px;
+}
+
+.slugmart {
+  margin-right: auto;
+  font-size: 2em;
+}
+
 .nav-links {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-around;
-    width: 50%; /* Adjust the width as needed */
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5em;
 }
 
 .nav-item {
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  margin: 10px;
+  padding: 10px 15px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #1877f2;
 }
 
-.nav-item:hover {
-    background-color: #ffd700; /* Slightly darker yellow on hover */
-}
-
-/* Font Awesome icons */
-.nav-item i {
-    margin-right: 8px;
-}
-
-.active {
-    background-color: #ffd700; /* Indicate the active route */
-    color: #333;
+.nav-item a {
+  color: #fff;
+  text-decoration: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .logout-btn {
-    background: none;
-    border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em;
+  text-decoration: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 10px 15px;
+  background-color: #1877f2;
+}
+
+.mobile-menu-icon {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 85px;
+    left: 0;
+    width: 100%;
+    background-color: #1877f2;
+    z-index: 1;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .nav-item,
+  .logout-btn {
+    width: 100%;
+    height: 50px;
+    margin: 0;
     color: #fff;
-    font-size: 1.2rem;
-    cursor: pointer;
+    list-style-type: none;
+    background-color: #1877f2;
+  }
+
+  .nav-item a,
+  .logout-btn {
+    width: 100%;
+    padding-left: 20px;
+  }
+
+  .mobile-menu-icon {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-links-mobile {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+  }
+
+  .nav-item {
+    margin: 0 10px;
     padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    background-color: #1877f2;
   }
-  
-  .logout-btn:hover {
-    background-color: #ffd700; /* Same hover effect as other items */
-  }
+}
