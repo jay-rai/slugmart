@@ -135,6 +135,7 @@ function AccountPage(){
                                 <h3>{listing.title}</h3>
                                 <p>{listing.description}</p>
                                 <p><strong>Price:</strong> ${listing.price}</p>
+                                <p><strong>Category:</strong> {listing.category}</p>
                                 <p><strong>Status:</strong> {listing.status || 'available'}</p>
                                 
                                 <div className="listing-actions">

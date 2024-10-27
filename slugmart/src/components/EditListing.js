@@ -5,6 +5,8 @@ import { db, storage } from '../config/firebase-config'; // Import Firebase conf
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
+import './ListingsPage.css';
+
 
 function EditListing(){
     //get listing id
@@ -15,10 +17,15 @@ function EditListing(){
         title: '',
         description: '',
         price: '',
+        category: '',
         images: [],
     });
     const [newImageUpload, setNewImageUpload] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+
+    const listCategories = ["Books", "Clothing, Shoes, & Accessories", "Collectibles",
+      "Electronics", "Crafts", "Dolls & Bears", "Home & Garden", "Motors", "Pet Supplies",
+       "Sporting Goods", "Toys & Hobbies", "Antiques", "Computers/Tablets"];
 
     // fetch listing based on id
     useEffect(() => {
@@ -75,6 +82,7 @@ function EditListing(){
             title: listing.title,
             description: listing.description,
             price: listing.price,
+            category: listing.category
         });
         alert('Listing updated!');
         navigate('/account'); 
@@ -105,40 +113,60 @@ function EditListing(){
             <h1>Edit Listing</h1>
             <form onSubmit={handleUpdateListing}>
             <div>
-                <label>Title:</label>
+                <label className="form-label">Title:</label>
                 <input
                 type="text"
                 name="title"
                 value={listing.title}
                 onChange={handleInputChange}
+                className="form-input"
                 required
                 />
             </div>
 
             <div>
-                <label>Price:</label>
+                <label className="form-label">Price:</label>
                 <input
                 type="number"
                 name="price"
                 value={listing.price}
                 onChange={handleInputChange}
+                className="form-input"
                 required
                 />
             </div>
 
             <div>
-                <label>Description:</label>
+                <label className="form-label">Description:</label>
                 <textarea
                 name="description"
                 value={listing.description}
                 onChange={handleInputChange}
+                className="form-input"
                 required
                 />
             </div>
 
+            <div>
+              <label className="form-label">Category: </label>
+              <select 
+                // className="select-categories"
+                value={listing.category} 
+                name="category"
+                onChange={handleInputChange} 
+                className="select-categories"
+                required>
+
+                <option value="" disabled>Select a Category</option>
+                {listCategories.map((cat, index) => (
+                  <option key={index} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+
             {/* Image Upload Section */}
             <div>
-                <label>Current Image:</label>
+                <label className="form-label">Current Image:</label>
                 {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100px' }} />}
                 <input type="file" onChange={handleImageChange} accept="image/*" />
             </div>

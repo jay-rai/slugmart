@@ -15,6 +15,12 @@ function AddListing() {
         const [imageUpload, setImageUpload] = useState(null);
         const [imagePreview, setImagePreview] = useState(null);
         const [uploading, setUploading] = useState(false);
+        const [category, setCategory] = useState('');
+
+        const listCategories = ["Books", "Clothing, Shoes, & Accessories", "Collectibles",
+             "Electronics", "Crafts", "Dolls & Bears", "Home & Garden", "Motors", "Pet Supplies",
+              "Sporting Goods", "Toys & Hobbies", "Antiques", "Computers/Tablets"];
+
         // CONDITION IS LIKE NEW USED OTHER
         const [condition, setCondition] = useState('');
 
@@ -56,6 +62,7 @@ function AddListing() {
                   description,
                   price,  // Add price to the listing
                   condition,  // Add condition to the listing
+                  category,
                   images: [downloadURL],
                   ownerId: user.uid,
                   createdAt: new Date(),
@@ -129,6 +136,22 @@ function AddListing() {
                       className="form-input"
                       required
                     />
+                  </div>
+
+                  {/* Categories Section */}
+                  <div>
+                    <label className="form-label">Category: </label>
+                    <select 
+                      className="select-categories"
+                      value={category} 
+                      onChange={(e) => setCategory(e.target.value)} 
+                      required>
+
+                      <option value="" disabled>Select a Category</option>
+                      {listCategories.map((cat, index) => (
+                        <option key={index} value={cat}>{cat}</option>
+                      ))}
+                    </select>
                   </div>
                   
                   <div className="condition-buttons">
