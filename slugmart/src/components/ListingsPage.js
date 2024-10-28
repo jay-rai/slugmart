@@ -62,6 +62,7 @@ function ListingsPage() {
             <img src={listing.images[0]} alt={listing.title} className="listing-image" />
             <h3>{listing.title}</h3>
             <p><strong>Price:</strong> ${listing.price}</p>
+            <p><strong>Category:</strong> {listing.category}</p>
             <p>{listing.description}</p>
           </div>
           
