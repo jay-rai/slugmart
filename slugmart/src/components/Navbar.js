@@ -26,7 +26,7 @@ function Navbar({ handleLogout }) {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/settings">
+          <NavLink to="/edit-account">
             <i className="fas fa-gears"></i>
           </NavLink>
         </li>

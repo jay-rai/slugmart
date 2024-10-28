@@ -13,7 +13,6 @@ function ListingsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredListings, setFilteredListings] = useState([]);
 
-    // Fetch listings from Firestore
     const fetchListings = async () => {
         const listingsCollection = collection(db, 'listings');
         const listingSnapshot = await getDocs(listingsCollection);
@@ -59,13 +58,14 @@ function ListingsPage() {
         </div>
         <div className="listings-grid">
           {filteredListings.map((listing) => (
-            <div key={listing.id} className="listing-card">
-              <img src={listing.images[0]} alt={listing.title} className="listing-image" />
-              <h3>{listing.title}</h3>
-              <p><strong>Price:</strong> ${listing.price}</p>
-              <p><strong>Category: </strong> {listing.category}</p>
-              <p>{listing.description}</p>
-            </div>
+            <div key={listing.id} className="listing-card" onClick={() => navigate(`/view-listing/${listing.id}`)}>
+            <img src={listing.images[0]} alt={listing.title} className="listing-image" />
+            <h3>{listing.title}</h3>
+            <p><strong>Price:</strong> ${listing.price}</p>
+            <p>{listing.description}</p>
+          </div>
+          
+          
           ))}
         </div>
       </div>

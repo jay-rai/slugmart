@@ -109,22 +109,7 @@ function AccountPage(){
                         </>
                     )}
                 </div>
-                <form onSubmit={handleFormSubmit} className="profile-form">
-                    <div className="form-group">
-                        <label htmlFor="location">Location</label>
-                        <input
-                            type="text"
-                            id="location"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            placeholder="Where are you located? (College Name/Off Campus)"
-                            className="form-input"
-                        />
-                    </div>
-                    <button type="submit" className="submit-button">
-                        Save Changes
-                    </button>
-                </form>
+                
 
                 <h2>Your Listings</h2>
                 <div className="listings-grid">
