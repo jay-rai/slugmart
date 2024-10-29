@@ -23,6 +23,8 @@ html {
 .slugmart {
   margin-right: auto;
   font-size: 2em;
+  color: #fff;
+  text-decoration: none;
 }
 
 .nav-links {
@@ -38,11 +40,9 @@ html {
   align-items: center;
   justify-content: center;
   color: #fff;
-  text-decoration: none;
   margin: 10px;
   padding: 10px 15px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #1877f2;
 }
 
 .nav-item a {
@@ -63,7 +63,6 @@ html {
   text-decoration: none;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 10px 15px;
-  background-color: #1877f2;
 }
 
 .mobile-menu-icon {
@@ -101,7 +100,6 @@ html {
     margin: 0;
     color: #fff;
     list-style-type: none;
-    background-color: #1877f2;
   }
 
   .nav-item a,
@@ -127,6 +125,5 @@ html {
   .nav-item {
     margin: 0 10px;
     padding: 10px 15px;
-    background-color: #1877f2;
   }
 }

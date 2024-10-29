@@ -9,10 +9,12 @@ function Navbar({ handleLogout }) {
 
   return (
     <nav className="navbar">
-      <div className="logo">
+      <NavLink to="/browse" className="logo">
         <img src={logo} alt="Slugmart Logo" />
-      </div>
-      <div className="slugmart">slugmart</div>
+      </NavLink>
+      <NavLink to="/browse" className="slugmart">
+        slugmart
+      </NavLink>
       <ul className={isMobile ? "nav-links-mobile" : "nav-links"}>
         <li className="nav-item">
           <NavLink to="/browse">Browse</NavLink>
