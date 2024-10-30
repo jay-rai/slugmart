@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase-config';
 import Navbar from './Navbar';
@@ -10,6 +10,7 @@ function ViewListing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [owner, setOwner] = useState(null); // Separate state for owner info
+  const navigate = useNavigate();
   
   const fetchListing = async () => {
     try {
@@ -51,7 +52,7 @@ function ViewListing() {
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout} />
+      <Navbar handleLogout={handleLogout(navigate)} />
       <div className="view-listing-container">
         <div className="image-slider">
           {/* Display multiple images in a sliding view */}
