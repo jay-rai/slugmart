@@ -12,6 +12,13 @@ function ListingsPage() {
     // states for searching
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredListings, setFilteredListings] = useState([]);
+    const [filterCategory, setFilterCategory] = useState("");
+    const [activeCategory, setActiveCategory] = useState("");
+
+    const listCategories = ["Books", "Clothing, Shoes, & Accessories",
+      "Collectibles", "Electronics", "Crafts", "Dolls & Bears", "Home & Garden",
+      "Motors", "Pet Supplies", "Sporting Goods", "Toys & Hobbies", "Antiques",
+      "Computers/Tablets"];
 
     const fetchListings = async () => {
         const listingsCollection = collection(db, 'listings');
@@ -26,7 +33,7 @@ function ListingsPage() {
         }));
 
         setListings(listingsList);
-  };
+    };
 
   useEffect(() => {
     fetchListings();
@@ -36,12 +43,18 @@ function ListingsPage() {
     const filtered = listings.filter((listing) => {
       const searchLower = searchQuery.toLowerCase();
       return (
-        listing.title.toLowerCase().includes(searchLower) ||
-        listing.description.toLowerCase().includes(searchLower)
+        (listing.title.toLowerCase().includes(searchLower) ||
+        listing.description.toLowerCase().includes(searchLower)) &&
+        (filterCategory == "" || listing.category == filterCategory)
       );
     });
     setFilteredListings(filtered);
-  }, [searchQuery, listings]);
+  }, [searchQuery, listings, filterCategory]);
+
+  const handleCategoryClick = (category) => {
+    setFilterCategory(category);
+    setActiveCategory(category);
+  }
 
   return (
     <div>
@@ -56,6 +69,21 @@ function ListingsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+
+        <div>
+          <button 
+            className={`category-button ${activeCategory == "" ? 'active' : ''}`}
+            onClick={() => handleCategoryClick("")}>Show All</button>
+          {listCategories.map((category) => (
+            <button 
+              key={category}
+              className={`category-button ${activeCategory == category ? 'active' : ''}`}
+              onClick={() => handleCategoryClick(category)}>
+              {category}
+            </button>
+          ))}
+        </div>
+
         <div className="listings-grid">
           {filteredListings.map((listing) => (
             <div key={listing.id} className="listing-card" onClick={() => navigate(`/view-listing/${listing.id}`)}>
@@ -65,8 +93,6 @@ function ListingsPage() {
             <p><strong>Category:</strong> {listing.category}</p>
             <p>{listing.description}</p>
           </div>
-          
-          
           ))}
         </div>
       </div>
