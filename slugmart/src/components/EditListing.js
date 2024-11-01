@@ -20,7 +20,8 @@ function EditListing() {
     });
     const [newImageUploads, setNewImageUploads] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
-
+    const [isMobile, setIsMobile] = useState(false);
+    
     const listCategories = ["Books", "Clothing, Shoes, & Accessories", "Collectibles",
       "Electronics", "Crafts", "Dolls & Bears", "Home & Garden", "Motors", "Pet Supplies",
        "Sporting Goods", "Toys & Hobbies", "Antiques", "Computers/Tablets"];
@@ -156,82 +157,83 @@ function EditListing() {
 
     return (
         <div>
-        <Navbar handleLogout={handleLogout(navigate)}/>
-        <div className="edit-listing-container">
-            <h1>Edit Listing</h1>
-            <form onSubmit={handleUpdateListing}>
-            <div>
-                <label className="form-label">Title:</label>
-                <input
-                type="text"
-                name="title"
-                value={listing.title}
-                onChange={handleInputChange}
-                className="form-input"
-                required
-                />
-            </div>
-
-            <div>
-                <label className="form-label">Price:</label>
-                <input
-                type="number"
-                name="price"
-                value={listing.price}
-                onChange={handleInputChange}
-                className="form-input"
-                required
-                />
-            </div>
-
-            <div>
-                <label className="form-label">Description:</label>
-                <textarea
-                name="description"
-                value={listing.description}
-                onChange={handleInputChange}
-                className="form-input"
-                required
-                />
-            </div>
-
-            <div>
-              <label className="form-label">Category: </label>
-              <select 
-                value={listing.category} 
-                name="category"
-                onChange={handleInputChange} 
-                className="select-categories"
-                required>
-                <option value="" disabled>Select a Category</option>
-                {listCategories.map((cat, index) => (
-                  <option key={index} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-                <label className="form-label">Current Images:</label>
-                <div className="image-preview-container">
-                    {imagePreviews.map((image, index) => (
-                        <img key={index} src={image} alt="Preview" className="image-preview" />
-                    ))}
+            <Navbar handleLogout={handleLogout(navigate)}/>
+            <h1 className="edit-lisiting-title">Edit Listing</h1>
+            <div className={isMobile ? "edit-listing-container-mobile" : "edit-listing-container"}>
+                <div className="image-container">
+                        <label className="form-label">Current Images:</label>
+                        <div className="image-preview-container">
+                            {imagePreviews.map((image, index) => (
+                                <img key={index} src={image} alt="Preview" className="image-preview" />
+                            ))}
+                        </div>
+                        {imagePreviews.length < 5 && (
+                            <input 
+                                type="file" 
+                                onChange={handleImageChange} 
+                                accept="image/*" 
+                                multiple 
+                                className="file-input" 
+                            />
+                        )}
                 </div>
-                {imagePreviews.length < 5 && (
-                    <input 
-                        type="file" 
-                        onChange={handleImageChange} 
-                        accept="image/*" 
-                        multiple 
-                        className="file-input" 
-                    />
-                )}
-            </div>
+                <div className="add-listing-form">
+                    <form onSubmit={handleUpdateListing}>
+                    <div>
+                        <label className="form-label">Title:</label>
+                        <input
+                        type="text"
+                        name="title"
+                        value={listing.title}
+                        onChange={handleInputChange}
+                        className="form-input"
+                        required
+                        />
+                    </div>
 
-            <button type="submit">Update Listing</button>
-            </form>
+                    <div>
+                        <label className="form-label">Price:</label>
+                        <input
+                        type="number"
+                        name="price"
+                        value={listing.price}
+                        onChange={handleInputChange}
+                        className="form-input"
+                        required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="form-label">Description:</label>
+                        <textarea
+                        name="description"
+                        value={listing.description}
+                        onChange={handleInputChange}
+                        className="form-input"
+                        required
+                        />
+                    </div>
+
+                    <div>
+                    <label className="form-label">Category: </label>
+                    <select 
+                        value={listing.category} 
+                        name="category"
+                        onChange={handleInputChange} 
+                        className="select-categories"
+                        required>
+                        <option value="" disabled>Select a Category</option>
+                        {listCategories.map((cat, index) => (
+                        <option key={index} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                    </div>
+                    <button type="submit" className='post-button'>Update Listing</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        </div>
+        
     );
 }
 
