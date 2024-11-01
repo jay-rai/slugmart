@@ -39,14 +39,22 @@ h3 {
     padding: 20px;
 }
 
+@media (min-width: 601px) {
+    .edit-listing-container-mobile {
+        background: black;
+    }
+}
 .edit-listing-container {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  padding: 20px;
-  width: 30%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 20px;
 }
 
+
+.edit-lisiting-title{
+    padding: 20px;
+}
 /* Left side: square button with a plus sign */
 .plus-button-container {
     display: flex;
@@ -72,8 +80,14 @@ h3 {
     background-color: #f0f0f0;
 }
 
-.hidden-file-input {
-    display: none;
+
+.file-input {
+    background-color: #f8b400;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 /* Right side: form container */
@@ -113,26 +127,26 @@ h3 {
 
 /* Category Buttons */
 .category-button {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.category-button.active {
-  background-color: #f8b400;
-  color: white;
-  border: none;
-}
-
-.category-button:hover {
-  background-color: #f8b400;
-  color: white;
-}
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .category-button.active {
+    background-color: #f8b400;
+    color: white;
+    border: none;
+  }
+  
+  .category-button:hover {
+    background-color: #f8b400;
+    color: white;
+  }
 
 /* Condition buttons */
 .condition-buttons {
@@ -290,8 +304,8 @@ h3 {
 }
 
 .image-preview {
-    width: 100px;
-    height: 100px;
+    width: 300px;
+    height: 300px;
     object-fit: cover;
 }
 
