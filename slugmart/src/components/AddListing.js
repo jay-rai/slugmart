@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth, db, storage } from "../config/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import './ListingsPage.css';
+import './AddListing.css';
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
 import { useNavigate } from 'react-router-dom';

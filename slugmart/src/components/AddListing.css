@@ -1,0 +1,509 @@
+.browse-container {
+    padding: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.listing-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.listing-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+h3 {
+    margin-top: 10px;
+}
+
+/* Container for the entire add listing page */
+.add-listing-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.edit-listing-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 20px;
+  width: 30%;
+}
+
+/* Left side: square button with a plus sign */
+.plus-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plus-button {
+    width: 150px;
+    height: 150px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, background-image 0.3s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.plus-button:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+/* Right side: form container */
+.add-listing-form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Categories */
+.select-categories {
+  width: 30%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.select-categories:hover {
+  border-color: #1877f2;
+  border-width: 2px
+}
+
+/* Category Buttons */
+.category-button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-button.active {
+  background-color: #f8b400;
+  color: white;
+  border: none;
+}
+
+.category-button:hover {
+  background-color: #f8b400;
+  color: white;
+}
+
+/* Condition buttons */
+.condition-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.condition-btn {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.condition-btn.active {
+    background-color: #f8b400;
+    color: white;
+    border: none;
+}
+
+.condition-btn:hover {
+    background-color: #f8b400;
+    color: white;
+}
+
+/* Post button */
+.post-button {
+    background-color: #f8b400;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post-button:hover {
+    background-color: #ffd700;
+}
+
+.post-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.listing-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+.action-button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button.sold {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.action-button.remove {
+    background-color: #FF6347;
+    color: white;
+}
+
+.action-button.edit {
+    background-color: #f8b400;
+    color: white;
+}
+
+.action-button:hover {
+    background-color: #ddd;
+}
+
+.action-button.sold:hover {
+    background-color: #45a049;
+}
+
+.action-button.remove:hover {
+    background-color: #e74c3c;
+}
+
+.action-button.edit:hover {
+    background-color: #ffd700;
+}
+
+.listing-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.listing-card {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.view-listing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-slider {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-slider img {
+    width: 500px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.image-slider button {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.image-slider button:first-of-type {
+    left: 0;
+}
+
+.image-slider button:last-of-type {
+    right: 0;
+}
+
+.listing-details {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* View/Add Listing  */
+
+.image-preview-container {
+    display: flex;
+    gap: 10px;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+
+.seller-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 2px solid black;
+    width: fit-content;
+    margin: 20px 0;
+  }
+  
+  .seller-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 20px;
+  }
+  
+  .seller-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .seller-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .seller-location {
+    font-size: 14px;
+    color: gray;
+  }
+
+/* Responsive styling */
+@media (max-width: 768px) {
+
+  /* Browse Container */
+  .browse-container {
+    padding: 10px;
+  }
+
+  /* Search Bar */
+  .search-bar input {
+    padding: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+
+  /* Listings Grid */
+  .listings-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 15px;
+  }
+
+  /* Add Listing Container */
+  .add-listing-container {
+    flex-direction: column; /* Stack image preview and form */
+    padding: 10px;
+  }
+
+  /* Edit Listing Container */
+  .edit-listing-container {
+    width: 100%;
+  }
+
+  /* Plus Button */
+  .plus-button {
+    width: 100px;
+    height: 100px;
+    font-size: 1.5rem;
+  }
+
+  /* Image Preview */
+  .image-preview {
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Form */
+  .add-listing-form {
+    width: 100%;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .form-input,
+  .select-categories {
+    width: 100%;
+    padding: 8px;
+  }
+
+  /* Category Button */
+  .category-button {
+    padding: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  /* Condition Button */
+  .condition-buttons {
+    gap: 8px;
+  }
+
+  .condition-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  /* Post Button */
+  .post-button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  /* Listing Card */
+  .listing-card {
+    padding: 8px;
+  }
+
+  /* Image Slider */
+  .image-slider img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Action Buttons */
+  .action-button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  /* Seller Info */
+  .seller-info-container {
+    padding: 8px;
+  }
+
+  .seller-img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  /* Listings Grid */
+  .listings-grid {
+    grid-template-columns: 1fr; /* Single column layout for extra small devices */
+  }
+
+  /* Search Bar */
+  .search-bar input {
+    padding: 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Image Slider */
+  .image-slider img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Form Labels and Inputs */
+  .form-label {
+    font-size: 0.85rem;
+  }
+
+  .form-input, .select-categories {
+    padding: 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Condition and Category Buttons */
+  .condition-btn, .category-button {
+    padding: 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Post Button */
+  .post-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Action Buttons */
+  .action-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Seller Info */
+  .seller-info-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .seller-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+}
+
