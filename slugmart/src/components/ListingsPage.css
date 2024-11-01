@@ -44,7 +44,8 @@ h3 {
         background: black;
     }
 }
-.edit-listing-container {
+
+.edit-listing-page-container {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -303,7 +304,7 @@ h3 {
     gap: 10px;
 }
 
-.image-preview {
+.edit-page-image-preview {
     width: 300px;
     height: 300px;
     object-fit: cover;

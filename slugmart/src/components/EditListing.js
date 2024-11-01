@@ -159,12 +159,12 @@ function EditListing() {
         <div>
             <Navbar handleLogout={handleLogout(navigate)}/>
             <h1 className="edit-lisiting-title">Edit Listing</h1>
-            <div className={isMobile ? "edit-listing-container-mobile" : "edit-listing-container"}>
+            <div className={isMobile ? "edit-listing-container-mobile" : "edit-listing-page-container"}>
                 <div className="image-container">
                         <label className="form-label">Current Images:</label>
                         <div className="image-preview-container">
                             {imagePreviews.map((image, index) => (
-                                <img key={index} src={image} alt="Preview" className="image-preview" />
+                                <img key={index} src={image} alt="Preview" className="edit-page-image-preview" />
                             ))}
                         </div>
                         {imagePreviews.length < 5 && (
