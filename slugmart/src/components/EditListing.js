@@ -5,7 +5,7 @@ import { db, storage } from '../config/firebase-config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
-import './ListingsPage.css';
+import './EditListing.css';
 
 function EditListing() {
     const { id } = useParams();
@@ -158,13 +158,13 @@ function EditListing() {
     return (
         <div>
             <Navbar handleLogout={handleLogout(navigate)}/>
-            <h1 className="edit-lisiting-title">Edit Listing</h1>
-            <div className={isMobile ? "edit-listing-container-mobile" : "edit-listing-page-container"}>
+            <h1 className="editListingPage-title">Edit Listing</h1>
+            <div className="editListingPage-container">
                 <div className="image-container">
                         <label className="form-label">Current Images:</label>
                         <div className="image-preview-container">
                             {imagePreviews.map((image, index) => (
-                                <img key={index} src={image} alt="Preview" className="edit-page-image-preview" />
+                                <img key={index} src={image} alt="Preview" className="editListingPage-image-preview" />
                             ))}
                         </div>
                         {imagePreviews.length < 5 && (
@@ -173,7 +173,7 @@ function EditListing() {
                                 onChange={handleImageChange} 
                                 accept="image/*" 
                                 multiple 
-                                className="file-input" 
+                                className="editListPage-file-input" 
                             />
                         )}
                 </div>
@@ -228,7 +228,7 @@ function EditListing() {
                         ))}
                     </select>
                     </div>
-                    <button type="submit" className='post-button'>Update Listing</button>
+                    <button type="submit" className='editListingPage-post-button'>Update Listing</button>
                     </form>
                 </div>
             </div>
