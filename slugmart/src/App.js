@@ -1,15 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { auth, db } from "./config/firebase-config";
-import { ProviderId } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
 import ListingsPage from "./components/ListingsPage";
@@ -19,6 +9,7 @@ import EditListing from "./components/EditListing";
 import BadEmailPage from "./components/BadEmailPage.js";
 import EditAccount from "./components/EditAccount.js";
 import ViewListing from "./components/ViewListing.js";
+import UserMessages from "./components/UserMessages.js";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,6 +19,7 @@ function App() {
       <Routes>
         <Route path="" element={<LandingPage />}></Route>
         <Route path="/account" element={<AccountPage />}></Route>
+        <Route path="/messages" element={<UserMessages />} />
         <Route path="/edit-account" element={<EditAccount />}></Route>
         <Route path="/bad-email" element={<BadEmailPage />}></Route>
         <Route path="/browse" element={<ListingsPage />}></Route>

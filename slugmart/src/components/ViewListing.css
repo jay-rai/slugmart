@@ -1,0 +1,85 @@
+.view-listing-container {
+    padding: 20px;
+    margin-top: 20px; /* Spacing down from the navbar */
+}
+
+.image-slider {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.listing-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    scroll-snap-align: start;
+}
+
+.listing-title {
+    font-size: 1.8rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.listing-price {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.seller-info-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.seller-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.seller-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.seller-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.seller-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.seller-location {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.message-seller-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f8b400;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.message-seller-button:hover {
+    background-color: #d29300;
+}

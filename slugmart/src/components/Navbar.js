@@ -28,6 +28,11 @@ function Navbar({ handleLogout }) {
           </NavLink>
         </li>
         <li className="nav-item">
+          <NavLink to="/messages">
+            <i className="fas fa-comment-dots"></i>
+          </NavLink>
+        </li>
+        <li className="nav-item">
           <NavLink to="/edit-account">
             <i className="fas fa-gears"></i>
           </NavLink>

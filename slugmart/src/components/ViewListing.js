@@ -4,14 +4,18 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase-config';
 import Navbar from './Navbar';
 import { handleLogout } from '../authUtil/logOut';
+import './ViewListing.css';
+import { auth } from '../config/firebase-config';
 
 function ViewListing() {
   const { listingId } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [owner, setOwner] = useState(null); // Separate state for owner info
+  const [owner, setOwner] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
-  
+
+  // Fetch the listing and owner data
   const fetchListing = async () => {
     try {
       const listingRef = doc(db, 'listings', listingId);
@@ -20,12 +24,11 @@ function ViewListing() {
         const listingData = listingDoc.data();
         setListing(listingData);
 
-        // Fetch owner information if available
         if (listingData.ownerId) {
           const ownerRef = doc(db, 'users', listingData.ownerId);
           const ownerDoc = await getDoc(ownerRef);
           if (ownerDoc.exists()) {
-            setOwner(ownerDoc.data());
+            setOwner({ uid: ownerDoc.id, ...ownerDoc.data() });
           }
         }
       } else {
@@ -40,6 +43,8 @@ function ViewListing() {
 
   useEffect(() => {
     fetchListing();
+    // Set the current user
+    auth.onAuthStateChanged((user) => setCurrentUser(user));
   }, [listingId]);
 
   if (loading) {
@@ -50,12 +55,21 @@ function ViewListing() {
     return <p>Listing not found</p>;
   }
 
+  const handleMessageSeller = () => {
+    if (currentUser?.uid === owner?.uid) {
+      alert("You cannot message yourself.");
+      return;
+    }
+    navigate('/messages', { 
+      state: { recipientId: owner.uid, listingId: listingId, listingTitle: listing.title } 
+    });
+  };
+
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
       <div className="view-listing-container">
         <div className="image-slider">
-          {/* Display multiple images in a sliding view */}
           {listing.images && listing.images.length > 0 ? (
             listing.images.map((imageUrl, index) => (
               <img key={index} src={imageUrl} alt={`Listing Image ${index}`} className="listing-image" />
@@ -64,8 +78,8 @@ function ViewListing() {
             <p>No images available for this listing.</p>
           )}
         </div>
-        <h1>{listing.title}</h1>
-        <p><strong>Price:</strong> ${listing.price}</p>
+        <h1 className="listing-title">{listing.title}</h1>
+        <p className="listing-price"><strong>Price:</strong> ${listing.price}</p>
         <p><strong>Description:</strong> {listing.description}</p>
         <p><strong>Category:</strong> {listing.category}</p>
         <p><strong>Condition:</strong> {listing.condition}</p>
@@ -73,7 +87,6 @@ function ViewListing() {
         {owner && (
           <div className="seller-info-container">
             <div className="seller-img">
-              {/* Placeholder for user image */}
               {owner.picture ? (
                 <img src={owner.picture} alt="Seller" className="seller-img" />
               ) : (
@@ -83,6 +96,9 @@ function ViewListing() {
             <div className="seller-details">
               <p className="seller-name">{owner.name}</p>
               <p className="seller-location">{owner.location}</p>
+              <button className="message-seller-button" onClick={handleMessageSeller}>
+                Message Seller
+              </button>
             </div>
           </div>
         )}
