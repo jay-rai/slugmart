@@ -1,5 +1,27 @@
+.ListingsPage-content {
+  display: flex;
+  position: relative;
+}
+
+.ListingsPage-sidebar {
+  padding: 10px;
+  width: 15%;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #e9e6ed
+}
+
+.ListingsPage-sidebar strong {
+  display: block;
+  font-size: 1.2rem;
+  padding: 10px 0;
+}
+
 .ListingsPage-browse-container {
-  padding: 20px;
+  width: 80%;
+  padding: 15px;
 }
 
 .ListingsPage-search-bar input {
@@ -54,14 +76,18 @@
 }
 
 .ListingsPage-category-button {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  margin-bottom: 10px;
-  margin-right: 10px;
+  margin-bottom: 7px;
+  margin-right: 7px;
   background-color: #f9f9f9;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .ListingsPage-category-button--active,
@@ -70,6 +96,8 @@
   color: white;
   border: none;
 }
+
+
 
 @media (max-width: 768px) {
   .ListingsPage-browse-container {

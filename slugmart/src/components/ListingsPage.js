@@ -72,18 +72,11 @@ function ListingsPage() {
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
-      <div className="ListingsPage-browse-container">
-        <h1>Browse Listings</h1>
-        <div className="ListingsPage-search-bar">
-          <input
-            type="text"
-            placeholder="Search listings..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
 
-        <div>
+      <div className="ListingsPage-content">
+
+        <div className="ListingsPage-sidebar">
+          <strong> Filters </strong>
           <button
             className={`ListingsPage-category-button ${
               activeCategory == "" ? "ListingsPage-category-button--active" : ""
@@ -107,26 +100,38 @@ function ListingsPage() {
           ))}
         </div>
 
-        <div className="ListingsPage-listings-grid">
-          {filteredListings.map((listing) => (
-            <div
-              key={listing.id}
-              className="ListingsPage-listing-card"
-              onClick={() => navigate(`/view-listing/${listing.id}`)}
-            >
-              <div className="ListingsPage-listing-image-container">
-                <img
-                  src={listing.images[0]}
-                  alt={listing.title}
-                  className="ListingsPage-listing-image"
-                />
+        <div className="ListingsPage-browse-container">
+          <h1>Browse Listings</h1>
+          <div className="ListingsPage-search-bar">
+            <input
+              type="text"
+              placeholder="Search listings..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="ListingsPage-listings-grid">
+            {filteredListings.map((listing) => (
+              <div
+                key={listing.id}
+                className="ListingsPage-listing-card"
+                onClick={() => navigate(`/view-listing/${listing.id}`)}
+              >
+                <div className="ListingsPage-listing-image-container">
+                  <img
+                    src={listing.images[0]}
+                    alt={listing.title}
+                    className="ListingsPage-listing-image"
+                  />
+                </div>
+                <div className="ListingsPage-listing-price">
+                  <strong>$ {listing.price}</strong>
+                </div>
+                <div className="ListingsPage-listing-title">{listing.title}</div>
               </div>
-              <div className="ListingsPage-listing-price">
-                <strong>$ {listing.price}</strong>
-              </div>
-              <div className="ListingsPage-listing-title">{listing.title}</div>
-            </div>
-          ))}
+            ))}
+          </div>  
         </div>
       </div>
     </div>
