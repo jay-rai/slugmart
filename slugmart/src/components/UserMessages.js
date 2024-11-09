@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { db, auth } from '../config/firebase-config';
-import { collection, doc, addDoc, deleteDoc, query, where, onSnapshot, orderBy, serverTimestamp, updateDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, addDoc, deleteDoc, query, where, onSnapshot, orderBy, serverTimestamp, updateDoc, getDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import './UserMessages.css';
 import Navbar from './Navbar';
@@ -15,7 +15,6 @@ function UserMessages() {
     const [currentUser, setCurrentUser] = useState(null);
     const location = useLocation();
 
-    // Monitor authentication state
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
@@ -23,7 +22,6 @@ function UserMessages() {
         return () => unsubscribe();
     }, []);
 
-    // Fetch messages for selected conversation
     useEffect(() => {
         if (selectedConversation) {
             const messagesRef = collection(db, 'messages', selectedConversation.id, 'messages');
@@ -40,7 +38,7 @@ function UserMessages() {
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) return;
-        
+
         if (!selectedConversation) {
             console.error("No conversation selected");
             return;
@@ -96,7 +94,6 @@ function UserMessages() {
         setSelectedConversation(conversation);
     };
 
-    // Fetch conversations with real-time updates
     useEffect(() => {
         if (currentUser) {
             const conversationsQuery = query(
@@ -104,19 +101,37 @@ function UserMessages() {
                 where('users', 'array-contains', currentUser.uid)
             );
 
-            const unsubscribe = onSnapshot(conversationsQuery, (snapshot) => {
-                const conversationData = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setConversations(conversationData);
+            const unsubscribe = onSnapshot(conversationsQuery, async (snapshot) => {
+                const conversationPromises = snapshot.docs.map(async (docSnapshot) => {
+                    const conversationData = docSnapshot.data();
+                    const userIds = conversationData.users;
+
+                    // Fetch both usernames based on user IDs
+                    const userNames = await Promise.all(userIds.map(async (userId) => {
+                        const userDocRef = doc(db, 'users', userId);
+                        const userDoc = await getDoc(userDocRef);
+                        return userDoc.exists() ? userDoc.data().name : 'Unknown User';
+                    }));
+
+                    const otherUserName = userNames.find(name => name !== currentUser.displayName) || 'Seller';
+
+                    return {
+                        id: docSnapshot.id,
+                        latestMessage: conversationData.latestMessage,
+                        latestMessageTimestamp: conversationData.latestMessageTimestamp,
+                        users: userIds,
+                        otherUserName,
+                    };
+                });
+
+                const conversationsWithNames = await Promise.all(conversationPromises);
+                setConversations(conversationsWithNames);
             });
 
             return () => unsubscribe();
         }
     }, [currentUser]);
 
-    // Handle initial message template when navigating from a listing
     useEffect(() => {
         if (location.state && location.state.recipientId && currentUser) {
             const { recipientId, listingId, listingTitle } = location.state;
@@ -127,7 +142,6 @@ function UserMessages() {
             } else {
                 const startConversation = async () => {
                     const initialMessage = `Hi, I am interested in your [${listingTitle}](view-listing/${listingId})`;
-
                     const conversationRef = await addDoc(collection(db, 'messages'), {
                         users: [currentUser.uid, recipientId],
                         latestMessage: initialMessage,
@@ -135,7 +149,7 @@ function UserMessages() {
                     });
 
                     setSelectedConversation({ id: conversationRef.id, users: [currentUser.uid, recipientId], latestMessage: initialMessage });
-                    setNewMessage(initialMessage); // Set as template in input box
+                    setNewMessage(initialMessage);
                 };
 
                 startConversation();
@@ -150,7 +164,7 @@ function UserMessages() {
     return (
         <div>
             <Navbar handleLogout={handleLogout} />
-            <div className="user-messages-container">
+            <div className="user-messages-container-centered">
                 <div className="conversations-list">
                     <h3>Conversations</h3>
                     {conversations.map((conv) => (
@@ -159,8 +173,8 @@ function UserMessages() {
                             className={`conversation-item ${selectedConversation?.id === conv.id ? 'selected' : ''}`}
                             onClick={() => handleSelectConversation(conv)}
                         >
-                            <p><strong>{conv.otherUserName || 'Seller'}</strong></p>
-                            <p>{conv.latestMessage}</p>
+                            <p><strong>{conv.otherUserName}: &nbsp; </strong></p>
+                            <p>{conv.latestMessage ? `${conv.latestMessage.slice(0, 10)}...` : ''}</p> {/* Truncate message preview */}
                             <button 
                                 className="delete-conversation-btn" 
                                 onClick={(e) => {

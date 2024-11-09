@@ -15,7 +15,6 @@ function ViewListing() {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch the listing and owner data
   const fetchListing = async () => {
     try {
       const listingRef = doc(db, 'listings', listingId);
@@ -43,7 +42,6 @@ function ViewListing() {
 
   useEffect(() => {
     fetchListing();
-    // Set the current user
     auth.onAuthStateChanged((user) => setCurrentUser(user));
   }, [listingId]);
 
@@ -61,7 +59,14 @@ function ViewListing() {
       return;
     }
     navigate('/messages', { 
-      state: { recipientId: owner.uid, listingId: listingId, listingTitle: listing.title } 
+      state: { 
+        recipientId: owner.uid, 
+        listingId: listingId, 
+        listingTitle: listing.title,
+        listingImage: listing.images ? listing.images[0] : null,
+        listingDescription: listing.description,
+        listingPrice: listing.price
+      } 
     });
   };
 
