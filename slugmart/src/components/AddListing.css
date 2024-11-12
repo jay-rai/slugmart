@@ -2,7 +2,6 @@
 .add-listing-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: 20px;
 }
 
@@ -17,11 +16,6 @@
   margin-bottom: 20px;
   cursor: pointer;
   text-align: center;
-}
-
-.dropzone p {
-  margin: 0;
-  color: #aaa;
 }
 
 .image-preview-box {
@@ -39,9 +33,8 @@
   background-color: black;
   color: white;
   border: none;
-  padding: 5px;
-  cursor: pointer;
   border-radius: 50%;
+  cursor: pointer;
   width: 30px;
   height: 30px;
   display: flex;
@@ -61,7 +54,6 @@
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
   color: white;
-  padding: 10px;
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -104,24 +96,13 @@
   border-radius: 5px;
 }
 
-.form-input,
-.form-textarea {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.form-textarea {
-  height: 100px;
-  resize: none;
-}
-
 .select-categories {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 
 .condition-buttons {
@@ -175,7 +156,6 @@
   }
 
   .form-input,
-  .form-textarea,
   .select-categories {
     padding: 8px;
   }

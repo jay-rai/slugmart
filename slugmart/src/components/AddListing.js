@@ -134,17 +134,24 @@ function AddListing() {
     setImagePreviews(newPreviews);
     setCurrentIndex(0); // Reset the current index
   };
+
   // https://stackoverflow.com/questions/77412887/the-counter-between-the-slide-and-the-buttons-below-isn-t-the-same-in-react-com
   const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? imagePreviews.length - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => {
+      const newIndex =
+        prevIndex === 0 ? imagePreviews.length - 1 : prevIndex - 1;
+      setSelectedThumbnailIndex(newIndex);
+      return newIndex;
+    });
   };
 
   const handleNextClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === imagePreviews.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => {
+      const newIndex =
+        prevIndex === imagePreviews.length - 1 ? 0 : prevIndex + 1;
+      setSelectedThumbnailIndex(newIndex);
+      return newIndex;
+    });
   };
 
   return (
