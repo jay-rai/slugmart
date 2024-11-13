@@ -14,6 +14,9 @@ function ListingsPage() {
   const [filteredListings, setFilteredListings] = useState([]);
   const [filterCategory, setFilterCategory] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
+  const [bottomPrice, setBottomPrice] = useState("");
+  const [topPrice, setTopPrice] = useState("");
+  const [newToOld, setNewToOld] = useState(true);
 
   const listCategories = [
     "Books",
@@ -55,14 +58,32 @@ function ListingsPage() {
   useEffect(() => {
     const filtered = listings.filter((listing) => {
       const searchLower = searchQuery.toLowerCase();
+      const withinPrice =
+        (bottomPrice == "" || +(listing.price) >= +(bottomPrice)) &&
+        (topPrice == "" || +(listing.price) <= +(topPrice));
+
       return (
         (listing.title.toLowerCase().includes(searchLower) ||
           listing.description.toLowerCase().includes(searchLower)) &&
-        (filterCategory == "" || listing.category == filterCategory)
+        (filterCategory == "" || listing.category == filterCategory) &&
+        withinPrice
       );
     });
-    setFilteredListings(filtered);
-  }, [searchQuery, listings, filterCategory]);
+
+    if (newToOld)
+      setFilteredListings(filtered.reverse());
+    else
+      setFilteredListings(filtered);
+  
+  }, [searchQuery, listings, filterCategory, bottomPrice, topPrice, newToOld]);
+
+  // Ensures all text typed is a number for the price filter
+  const onlyNumbers = (event) => {
+    if (isNaN(event.key) && event.key != 'Backspace' &&
+        event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+      event.preventDefault();
+    }
+  };
 
   const handleCategoryClick = (category) => {
     setFilterCategory(category);
@@ -77,6 +98,45 @@ function ListingsPage() {
 
         <div className="ListingsPage-sidebar">
           <strong> Filters </strong>
+          <div className="ListingsPage-price-container">
+            <label> Filter By Price </label>
+            <div className="ListingsPage-price-row">
+              <input
+                type="text"
+                value={bottomPrice}
+                placeholder="min"
+                onChange={(e) => setBottomPrice(e.target.value)}
+                onKeyDown={onlyNumbers}
+                className="ListingsPage-form-input"
+                />
+              <input
+                type="text"
+                value={topPrice}
+                placeholder="max"
+                onChange={(e) => setTopPrice(e.target.value)}
+                onKeyDown={onlyNumbers}
+                className="ListingsPage-form-input"
+              />
+            </div>
+          <button
+            className={`ListingsPage-category-button ${
+              newToOld == true ? "ListingsPage-category-button--active" : ""
+            }`}
+            onClick={() => setNewToOld(true)}>
+
+            Newest To Oldest
+          </button>
+          <button
+            className={`ListingsPage-category-button ${
+              newToOld == false ? "ListingsPage-category-button--active" : ""
+            }`}
+            onClick={() => setNewToOld(false)}>
+
+            Oldest To Newest
+          </button>
+          </div>
+
+          <strong> Categories </strong>
           <button
             className={`ListingsPage-category-button ${
               activeCategory == "" ? "ListingsPage-category-button--active" : ""

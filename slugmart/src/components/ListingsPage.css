@@ -9,19 +9,26 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
-  background-color: #e9e6ed
+  overflow-y: scroll;
+  background-color: #e9e6ed;
+  scrollbar-color: #3f3e3e #e9e6ed;
+  scrollbar-width: thin;
 }
 
 .ListingsPage-sidebar strong {
   display: block;
-  font-size: 1.2rem;
-  padding: 10px 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.5rem;
+  padding: 5px 0;
 }
 
 .ListingsPage-browse-container {
   width: 80%;
   padding: 15px;
+}
+
+.ListingsPage-search-bar {
+  width: 95%;
 }
 
 .ListingsPage-search-bar input {
@@ -78,8 +85,8 @@
 .ListingsPage-category-button {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
+  border: 1px none #ccc;
+  border-radius: 10px;
   margin-bottom: 7px;
   margin-right: 7px;
   background-color: #f9f9f9;
@@ -93,10 +100,38 @@
 .ListingsPage-category-button--active,
 .ListingsPage-category-button:hover {
   background-color: #f8b400;
-  color: white;
+  color: black;
   border: none;
 }
 
+.ListingsPage-price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ListingsPage-price-container label {
+  display: block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  padding: 4px;
+}
+
+.ListingsPage-price-row {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  gap: 1rem;
+}
+
+.ListingsPage-form-input {
+  width: 35%;
+  height: 13px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
 
 @media (max-width: 768px) {
