@@ -1,85 +1,132 @@
 .view-listing-container {
-    padding: 20px;
-    margin-top: 20px; /* Spacing down from the navbar */
+  padding: 20px;
+  margin-top: 20px;
 }
 
-.image-slider {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
+.carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.carousel-button {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  z-index: 1;
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}
+
+.image-preview-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .listing-image {
-    width: 400px;
-    height: 400px;
-    object-fit: cover;
-    border-radius: 10px;
-    scroll-snap-align: start;
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.image-thumbnails {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.image-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.image-thumbnail.selected {
+  border-color: #f8b400;
 }
 
 .listing-title {
-    font-size: 1.8rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  font-size: 1.8rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .listing-price {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 20px;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .seller-info-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 20px;
-    margin-top: 20px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 20px;
+  margin-top: 20px;
 }
 
 .seller-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 15px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
 }
 
 .seller-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .seller-details {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .seller-name {
-    font-weight: bold;
-    margin-bottom: 5px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .seller-location {
-    color: #777;
-    font-size: 0.9rem;
+  color: #777;
+  font-size: 0.9rem;
 }
 
 .message-seller-button {
-    margin-top: 10px;
-    padding: 8px 16px;
-    background-color: #f8b400;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #f8b400;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .message-seller-button:hover {
-    background-color: #d29300;
+  background-color: #d29300;
 }
