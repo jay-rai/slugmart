@@ -1,8 +1,8 @@
-/* AddListing.css */
 .add-listing-container {
   display: flex;
   flex-direction: column;
   padding: 20px;
+  justify-content: center;
 }
 
 .dropzone {
@@ -33,13 +33,13 @@
   background-color: black;
   color: white;
   border: none;
-  border-radius: 50%;
   cursor: pointer;
   width: 30px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
 
 .carousel {
@@ -48,31 +48,41 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .carousel-button {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   border: none;
   color: white;
   cursor: pointer;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
+  font-size: 40px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1;
+  border-radius: 50%;
+}
+
+.carousel-button.prev::before,
+.carousel-button.next::before {
+  content: "";
+  font-size: 40px;
 }
 
 .carousel-button.prev {
-  left: 10px;
+  margin-right: 10px;
 }
 
 .carousel-button.next {
-  right: 10px;
+  margin-left: 10px;
 }
 
 .image-preview {
-  max-width: 100%;
-  max-height: 300px;
+  width: 300px;
+  height: 300px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -94,6 +104,7 @@
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .select-categories {
@@ -176,7 +187,17 @@
 
   .carousel-button {
     padding: 5px;
-    font-size: 16px;
+    font-size: 40px;
+  }
+
+  .carousel-button.prev::before,
+  .carousel-button.next::before {
+    font-size: 40;
+  }
+
+  .image-preview {
+    width: 250px;
+    height: 250px;
   }
 }
 
