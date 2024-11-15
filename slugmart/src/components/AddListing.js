@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { auth, db, storage } from "../config/firebase-config";
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import "./AddListing.css";
-import Navbar from "./Navbar";
-import { handleLogout } from "../authUtil/logOut";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db, storage } from "../config/firebase-config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Navbar from "./Navbar";
+import { useDropzone } from "react-dropzone";
+import { handleLogout } from "../authUtil/logOut";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile, isTablet } from "react-device-detect";
+import {
+  moveItem,
+  deleteImage,
+  beforeImage,
+  afterImage,
+  selectThumbnail,
+} from "./AddEditListingHelpers";
+import DragItem from "./DragItem";
+import "./AddEditListing.css";
 
 function AddListing() {
   const [title, setTitle] = useState("");
@@ -65,6 +77,7 @@ function AddListing() {
       setImages(newImages);
       setImagePreviews(newPreviews);
       setCurrentIndex(0);
+      setSelectedThumbnailIndex(0);
     },
   });
 
@@ -125,35 +138,6 @@ function AddListing() {
     setUploading(false);
     navigate("/");
   };
-
-  const handleImageDelete = (index) => {
-    const newImages = images.filter((_, i) => i !== index);
-    const newPreviews = imagePreviews.filter((_, i) => i !== index);
-
-    setImages(newImages);
-    setImagePreviews(newPreviews);
-    setCurrentIndex(0); // Reset the current index
-  };
-
-  // https://stackoverflow.com/questions/77412887/the-counter-between-the-slide-and-the-buttons-below-isn-t-the-same-in-react-com
-  const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex =
-        prevIndex === 0 ? imagePreviews.length - 1 : prevIndex - 1;
-      setSelectedThumbnailIndex(newIndex);
-      return newIndex;
-    });
-  };
-
-  const handleNextClick = () => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex =
-        prevIndex === imagePreviews.length - 1 ? 0 : prevIndex + 1;
-      setSelectedThumbnailIndex(newIndex);
-      return newIndex;
-    });
-  };
-
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
@@ -172,7 +156,14 @@ function AddListing() {
             <div className="carousel">
               <button
                 className="carousel-button prev"
-                onClick={handlePrevClick}
+                onClick={() =>
+                  beforeImage(
+                    currentIndex,
+                    setCurrentIndex,
+                    setSelectedThumbnailIndex,
+                    imagePreviews
+                  )
+                }
               >
                 &#8249;
               </button>
@@ -183,7 +174,16 @@ function AddListing() {
                   className="image-preview"
                 />
                 <button
-                  onClick={() => handleImageDelete(currentIndex)}
+                  onClick={() =>
+                    deleteImage(
+                      currentIndex,
+                      images,
+                      imagePreviews,
+                      setImages,
+                      setImagePreviews,
+                      setCurrentIndex
+                    )
+                  }
                   className="delete-image-button"
                 >
                   &times;
@@ -191,27 +191,48 @@ function AddListing() {
               </div>
               <button
                 className="carousel-button next"
-                onClick={handleNextClick}
+                onClick={() =>
+                  afterImage(
+                    currentIndex,
+                    setCurrentIndex,
+                    setSelectedThumbnailIndex,
+                    imagePreviews
+                  )
+                }
               >
                 &#8250;
               </button>
             </div>
           )}
           <div className="image-thumbnails">
-            {imagePreviews.map((preview, index) => (
-              <img
-                key={index}
-                src={preview}
-                alt={`Thumbnail ${index + 1}`}
-                className={`image-thumbnail ${
-                  index === selectedThumbnailIndex ? "selected" : ""
-                }`}
-                onClick={() => {
-                  setSelectedThumbnailIndex(index);
-                  setCurrentIndex(index);
-                }}
-              />
-            ))}
+            <DndProvider
+              backend={isMobile || isTablet ? TouchBackend : HTML5Backend}
+            >
+              {imagePreviews.map((preview, index) => (
+                <DragItem
+                  key={index}
+                  id={index}
+                  preview={preview}
+                  index={index}
+                  moveItem={(fromIndex, toIndex) =>
+                    moveItem(
+                      fromIndex,
+                      toIndex,
+                      imagePreviews,
+                      setImagePreviews
+                    )
+                  }
+                  selectThumbnail={(index) =>
+                    selectThumbnail(
+                      index,
+                      setSelectedThumbnailIndex,
+                      setCurrentIndex
+                    )
+                  }
+                  selected={index === selectedThumbnailIndex}
+                />
+              ))}
+            </DndProvider>
           </div>
         </div>
         <form onSubmit={handleListingSubmit} className="add-listing-form">
@@ -248,7 +269,7 @@ function AddListing() {
           </div>
 
           <div>
-            <label className="form-label">Category: </label>
+            <label className="form-label">Category:</label>
             <select
               className="select-categories"
               value={category}
@@ -293,9 +314,8 @@ function AddListing() {
               Other
             </button>
           </div>
-
-          <button type="submit" disabled={uploading} className="post-button">
-            {uploading ? "Uploading..." : "Post It"}
+          <button type="submit" className="submit-button">
+            {uploading ? "Uploading..." : "Update Listing"}
           </button>
         </form>
       </div>

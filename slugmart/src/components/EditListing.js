@@ -1,240 +1,353 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db, storage } from '../config/firebase-config';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import Navbar from './Navbar';
-import { handleLogout } from '../authUtil/logOut';
-import './EditListing.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db, storage } from "../config/firebase-config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Navbar from "./Navbar";
+import { useDropzone } from "react-dropzone";
+import { handleLogout } from "../authUtil/logOut";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile, isTablet } from "react-device-detect";
+import {
+  moveItem,
+  deleteImage,
+  beforeImage,
+  afterImage,
+  selectThumbnail,
+} from "./AddEditListingHelpers";
+import DragItem from "./DragItem";
+import "./AddEditListing.css";
 
 function EditListing() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
-    const [listing, setListing] = useState({
-        title: '',
-        description: '',
-        price: '',
-        category: '',
-        images: [],
-    });
-    const [newImageUploads, setNewImageUploads] = useState([]);
-    const [imagePreviews, setImagePreviews] = useState([]);
-    const [isMobile, setIsMobile] = useState(false);
-    
-    const listCategories = ["Books", "Clothing, Shoes, & Accessories", "Collectibles",
-      "Electronics", "Crafts", "Dolls & Bears", "Home & Garden", "Motors", "Pet Supplies",
-       "Sporting Goods", "Toys & Hobbies", "Antiques", "Computers/Tablets"];
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
 
-    // Fetch listing based on id
-    useEffect(() => {
-        const fetchListingData = async () => {
-            try {
-                const listingRef = doc(db, 'listings', id);
-                const listingDoc = await getDoc(listingRef);
-                if (listingDoc.exists()) {
-                    setListing(listingDoc.data());
-                    setImagePreviews(listingDoc.data().images || []);  // Set current images
-                } else {
-                    console.error('Listing not found!');
-                }
-            } catch (error) {
-                console.error('Error fetching listing:', error);
-            }
-            setLoading(false);
-        };
-        fetchListingData();
-    }, [id]);
+  const listCategories = [
+    "Books",
+    "Clothing, Shoes, & Accessories",
+    "Collectibles",
+    "Electronics",
+    "Crafts",
+    "Dolls & Bears",
+    "Home & Garden",
+    "Motors",
+    "Pet Supplies",
+    "Sporting Goods",
+    "Toys & Hobbies",
+    "Antiques",
+    "Computers/Tablets",
+  ];
 
-    // resize image
-    const resizeImage = (file, maxWidth, maxHeight, callback) => {
-        const img = document.createElement('img');
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-            img.src = e.target.result;
-
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        width = Math.round((width * maxHeight) / height);
-                        height = maxHeight;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-
-                canvas.toBlob(callback, file.type, 1);
-            };
-        };
-
-        reader.readAsDataURL(file);
-    };
-
-    // let user upload multiple images
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length + imagePreviews.length > 5) {
-            alert('You can only upload up to 5 images.');
-            return;
-        }
-
-        const newImagePreviews = [];
-        const newImageResized = [];
-
-        files.forEach(file => {
-            resizeImage(file, 400, 400, (blob) => {
-                newImageResized.push(blob);
-                newImagePreviews.push(URL.createObjectURL(blob));
-                setNewImageUploads([...newImageUploads, ...newImageResized]);
-                setImagePreviews([...imagePreviews, ...newImagePreviews]);
-            });
-        });
-    };
-
-    // update listing
-    const handleUpdateListing = async (e) => {
-        e.preventDefault();
-        const listingRef = doc(db, 'listings', id);
-
-        // Upload new images
-        if (newImageUploads.length > 0) {
-            const uploadedImages = await Promise.all(
-                newImageUploads.map(async (file) => {
-                    const storageRef = ref(storage, `listingsImages/${file.name}`);
-                    const uploadTask = uploadBytesResumable(storageRef, file);
-                    await new Promise((resolve, reject) => {
-                        uploadTask.on('state_changed', null, reject, resolve);
-                    });
-                    return getDownloadURL(uploadTask.snapshot.ref);
-                })
-            );
-
-            const updatedImages = [...listing.images, ...uploadedImages].slice(0, 5);
-
-            // Update listing with new images
-            await updateDoc(listingRef, {
-                ...listing,
-                images: updatedImages,
-            });
-
-            alert('Listing updated with new images!');
+  useEffect(() => {
+    const fetchListingData = async () => {
+      try {
+        const listingRef = doc(db, "listings", id);
+        const listingDoc = await getDoc(listingRef);
+        if (listingDoc.exists()) {
+          const listingData = listingDoc.data();
+          setTitle(listingData.title);
+          setDescription(listingData.description);
+          setPrice(listingData.price);
+          setCategory(listingData.category);
+          setCondition(listingData.condition);
+          setImages(listingData.images || []);
+          setImagePreviews(listingData.images || []);
+          setCurrentIndex(0);
         } else {
-            
-            await updateDoc(listingRef, {
-                title: listing.title,
-                description: listing.description,
-                price: listing.price,
-                category: listing.category
-            });
-            alert('Listing updated!');
+          console.error("Listing not found!");
         }
-
-        navigate('/account');
+      } catch (error) {
+        console.error("Error fetching listing:", error);
+      }
+      setLoading(false);
     };
+    fetchListingData();
+  }, [id]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setListing({ ...listing, [name]: value });
-    };
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/jpeg": [], "image/png": [], "image/jpg": [] },
+    maxFiles: 5 - images.length,
+    onDrop: (acceptedFiles, rejectedFiles) => {
+      if (rejectedFiles.length > 0) {
+        alert("Only JPEG and PNG files are allowed.");
+        return;
+      }
 
-    if (loading) {
-        return <p>Loading...</p>;
+      const filteredFiles = acceptedFiles.filter(
+        (file) =>
+          file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "image/jpg"
+      );
+
+      if (filteredFiles.length + images.length > 5) {
+        alert("You can upload up to 5 images.");
+        return;
+      }
+
+      const newImages = [...images, ...filteredFiles];
+      const newPreviews = newImages.map((file) =>
+        typeof file === "string" ? file : URL.createObjectURL(file)
+      );
+      setImages(newImages);
+      setImagePreviews(newPreviews);
+      setCurrentIndex(0);
+    },
+  });
+
+  const handleListingSubmit = async (e) => {
+    e.preventDefault();
+
+    if (images.length === 0) {
+      alert("Please upload at least one image of the item.");
+      return;
     }
 
-    return (
-        <div>
-            <Navbar handleLogout={handleLogout(navigate)}/>
-            <h1 className="editListingPage-title">Edit Listing</h1>
-            <div className="editListingPage-container">
-                <div className="image-container">
-                        <label className="form-label">Current Images:</label>
-                        <div className="image-preview-container">
-                            {imagePreviews.map((image, index) => (
-                                <img key={index} src={image} alt="Preview" className="editListingPage-image-preview" />
-                            ))}
-                        </div>
-                        {imagePreviews.length < 5 && (
-                            <input 
-                                type="file" 
-                                onChange={handleImageChange} 
-                                accept="image/*" 
-                                multiple 
-                                className="editListPage-file-input" 
-                            />
-                        )}
-                </div>
-                <div className="add-listing-form">
-                    <form onSubmit={handleUpdateListing}>
-                    <div>
-                        <label className="form-label">Title:</label>
-                        <input
-                        type="text"
-                        name="title"
-                        value={listing.title}
-                        onChange={handleInputChange}
-                        className="form-input"
-                        required
-                        />
-                    </div>
+    const listingRef = doc(db, "listings", id);
 
-                    <div>
-                        <label className="form-label">Price:</label>
-                        <input
-                        type="number"
-                        name="price"
-                        value={listing.price}
-                        onChange={handleInputChange}
-                        className="form-input"
-                        required
-                        />
-                    </div>
+    setUploading(true);
 
-                    <div>
-                        <label className="form-label">Description:</label>
-                        <textarea
-                        name="description"
-                        value={listing.description}
-                        onChange={handleInputChange}
-                        className="form-input"
-                        required
-                        />
-                    </div>
+    const newImageUrls = [];
+    for (let i = 0; i < images.length; i++) {
+      if (typeof images[i] === "string" && images[i].startsWith("http")) {
+        newImageUrls.push(images[i]);
+      } else {
+        const storageRef = ref(storage, `listingsImages/${images[i].name}`);
+        const uploadTask = uploadBytesResumable(storageRef, images[i]);
 
-                    <div>
-                    <label className="form-label">Category: </label>
-                    <select 
-                        value={listing.category} 
-                        name="category"
-                        onChange={handleInputChange} 
-                        className="select-categories"
-                        required>
-                        <option value="" disabled>Select a Category</option>
-                        {listCategories.map((cat, index) => (
-                        <option key={index} value={cat}>{cat}</option>
-                        ))}
-                    </select>
-                    </div>
-                    <button type="submit" className='editListingPage-post-button'>Update Listing</button>
-                    </form>
-                </div>
-            </div>
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            null,
+            (error) => {
+              console.error("Error uploading image:", error);
+              setUploading(false);
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              newImageUrls.push(downloadURL);
+              resolve();
+            }
+          );
+        });
+      }
+    }
+
+    await updateDoc(listingRef, {
+      title,
+      description,
+      price,
+      category,
+      condition,
+      images: newImageUrls,
+    });
+
+    alert("Listing updated!");
+    setUploading(false);
+    navigate("/account");
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <div>
+      <Navbar handleLogout={handleLogout(navigate)} />
+      <div className="add-listing-container">
+        <div {...getRootProps()} className="dropzone">
+          <input {...getInputProps()} />
+          {imagePreviews.length < 5 && (
+            <p>
+              Drag & drop some files here, or click to select files (Max 5
+              images)
+            </p>
+          )}
         </div>
-        
-    );
+        <div className="image-preview-container">
+          {imagePreviews.length > 0 && (
+            <div className="carousel">
+              <button
+                className="carousel-button prev"
+                onClick={() =>
+                  beforeImage(
+                    currentIndex,
+                    setCurrentIndex,
+                    setSelectedThumbnailIndex,
+                    imagePreviews
+                  )
+                }
+              >
+                &#8249;
+              </button>
+              <div className="image-preview-box">
+                <img
+                  src={imagePreviews[currentIndex]}
+                  alt="Preview"
+                  className="image-preview"
+                />
+                <button
+                  onClick={() =>
+                    deleteImage(
+                      currentIndex,
+                      images,
+                      imagePreviews,
+                      setImages,
+                      setImagePreviews,
+                      setCurrentIndex
+                    )
+                  }
+                  className="delete-image-button"
+                >
+                  &times;
+                </button>
+              </div>
+              <button
+                className="carousel-button next"
+                onClick={() =>
+                  afterImage(
+                    currentIndex,
+                    setCurrentIndex,
+                    setSelectedThumbnailIndex,
+                    imagePreviews
+                  )
+                }
+              >
+                &#8250;
+              </button>
+            </div>
+          )}
+          <div className="image-thumbnails">
+            <DndProvider
+              backend={isMobile || isTablet ? TouchBackend : HTML5Backend}
+            >
+              {imagePreviews.map((preview, index) => (
+                <DragItem
+                  key={index}
+                  id={index}
+                  preview={preview}
+                  index={index}
+                  moveItem={(fromIndex, toIndex) =>
+                    moveItem(
+                      fromIndex,
+                      toIndex,
+                      imagePreviews,
+                      setImagePreviews
+                    )
+                  }
+                  selectThumbnail={(index) =>
+                    selectThumbnail(
+                      index,
+                      setSelectedThumbnailIndex,
+                      setCurrentIndex
+                    )
+                  }
+                  selected={index === selectedThumbnailIndex}
+                />
+              ))}
+            </DndProvider>
+          </div>
+        </div>
+        <form onSubmit={handleListingSubmit} className="add-listing-form">
+          <div>
+            <label className="form-label">Title:</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="form-label">Price:</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="form-label">Description:</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="form-label">Category:</label>
+            <select
+              className="select-categories"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="" disabled>
+                Select a Category
+              </option>
+              {listCategories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="condition-buttons">
+            <button
+              type="button"
+              className={`condition-btn ${condition === "new" ? "active" : ""}`}
+              onClick={() => setCondition("new")}
+            >
+              New
+            </button>
+            <button
+              type="button"
+              className={`condition-btn ${
+                condition === "used" ? "active" : ""
+              }`}
+              onClick={() => setCondition("used")}
+            >
+              Used
+            </button>
+            <button
+              type="button"
+              className={`condition-btn ${
+                condition === "other" ? "active" : ""
+              }`}
+              onClick={() => setCondition("other")}
+            >
+              Other
+            </button>
+          </div>
+          <button type="submit" className="submit-button">
+            {uploading ? "Uploading..." : "Update Listing"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default EditListing;
