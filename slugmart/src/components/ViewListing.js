@@ -128,40 +128,36 @@ function ViewListing() {
           ))}
         </div>
         <h1 className="listing-title">{listing.title}</h1>
-        <p className="listing-price">
-          <strong>Price:</strong> ${listing.price}
-        </p>
-        <p>
-          <strong>Description:</strong> {listing.description}
-        </p>
-        <p>
-          <strong>Category:</strong> {listing.category}
-        </p>
-        <p>
-          <strong>Condition:</strong> {listing.condition}
-        </p>
+        <div className="listing-information-container">
+          <p className="listing-price">
+            <strong>Price:</strong> ${listing.price}
+          </p>
+          <p>
+            <strong>Description:</strong> {listing.description}
+          </p>
+          <p>
+            <strong>Category:</strong> {listing.category}
+          </p>
+          <p>
+            <strong>Condition:</strong> {listing.condition}
+          </p>
 
-        {owner && (
-          <div className="seller-info-container">
-            <div className="seller-img">
-              {owner.picture ? (
-                <img src={owner.picture} alt="Seller" className="seller-img" />
-              ) : (
-                <span>USER IMG</span>
-              )}
+          {owner && (
+            <div className="seller-info-container">
+
+              <div className="seller-details">
+                <p className="seller-name">Seller: {owner.name}</p>
+                <p className="seller-location">{owner.location}</p>
+                <button
+                  className="message-seller-button"
+                  onClick={handleMessageSeller}
+                >
+                  Message Seller
+                </button>
+              </div>
             </div>
-            <div className="seller-details">
-              <p className="seller-name">{owner.name}</p>
-              <p className="seller-location">{owner.location}</p>
-              <button
-                className="message-seller-button"
-                onClick={handleMessageSeller}
-              >
-                Message Seller
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

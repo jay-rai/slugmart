@@ -72,6 +72,12 @@
   margin-bottom: 10px;
 }
 
+.listing-information-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .listing-price {
   font-size: 1.2rem;
   color: #333;
@@ -79,12 +85,7 @@
 }
 
 .seller-info-container {
-  display: flex;
   align-items: center;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 20px;
-  margin-top: 20px;
 }
 
 .seller-img {
@@ -117,8 +118,7 @@
 }
 
 .message-seller-button {
-  margin-top: 10px;
-  padding: 8px 16px;
+  padding: 20px 16px;
   background-color: #f8b400;
   color: white;
   border: none;
