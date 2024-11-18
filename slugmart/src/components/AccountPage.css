@@ -75,3 +75,53 @@ p {
 .submit-button:hover {
     background-color: #ffd700;
 }
+
+.account-listing-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; 
+}
+
+@media (max-width: 768px) {
+    .account-listing-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.account-listing-card {
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+    border-radius: 8px;
+    text-align: center;
+    margin: 10px 0;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.account-listing-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.account-listing-image{
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.account-listing-button {
+    padding: 10px 10px;
+    background-color: #f8b400;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5px;
+  }
+  
+  .account-listing-button:hover {
+    background-color: #d29300;
+  }
+  

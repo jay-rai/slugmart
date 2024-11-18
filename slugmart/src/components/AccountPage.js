@@ -111,27 +111,24 @@ function AccountPage(){
                 </div>
                 
 
-                <h2>Your Listings</h2>
-                <div className="listings-grid">
+                <h2>Your Listings:</h2>
+                <div className="account-listing-grid">
                     {listings.length > 0 ? (
                         listings.map(listing => (
-                            <div key={listing.id} className="listing-card">
-                                <img src={listing.images[0]} alt={listing.title} className="listing-image" />
+                            <div key={listing.id} className="account-listing-card" onClick={() => handleEditListing(listing.id)}>
+                                <img src={listing.images[0]} alt={listing.title} className="account-listing-image" />
                                 <h3>{listing.title}</h3>
                                 <p>{listing.description}</p>
                                 <p><strong>Price:</strong> ${listing.price}</p>
                                 <p><strong>Category:</strong> {listing.category}</p>
                                 <p><strong>Status:</strong> {listing.status || 'available'}</p>
                                 
-                                <div className="listing-actions">
-                                    <button onClick={() => handleMarkAsSold(listing.id)} className="action-button sold">
+                                <div className="account-listing-actions">
+                                    <button onClick={() => handleMarkAsSold(listing.id)} className="account-listing-button action-button sold">
                                         Mark as Sold
                                     </button>
-                                    <button onClick={() => handleRemoveListing(listing.id)} className="action-button remove">
+                                    <button onClick={() => handleRemoveListing(listing.id)} className="account-listing-button action-button remove">
                                         Remove
-                                    </button>
-                                    <button onClick={() => handleEditListing(listing.id)} className="action-button edit">
-                                        Edit Listing
                                     </button>
                                 </div>
                             </div>
