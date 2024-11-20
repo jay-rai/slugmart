@@ -54,26 +54,28 @@ function LandingPage() {
       }
     });
 
-    document.body.classList.add("no-scroll");
+    document.body.classList.add("noScroll");
     return () => {
-      document.body.classList.remove("no-scroll");
+      document.body.classList.remove("noScroll");
       listener();
     };
   }, [navigate]);
 
   return (
-    <div className="landing-container">
-      <div className="flex-container">
-        <div className="fb-logo">
-          <h1>slugmart</h1>
-          <p>Buy, sell, trade with slugs on Slugmart.</p>
+    <div className="landing-wrapper">
+      <div className="landingContainer">
+        <div className="flexContainer">
+          <div className="fbLogo">
+            <h1>slugmart</h1>
+            <p>Buy, sell, trade with slugs on Slugmart.</p>
+          </div>
         </div>
-      </div>
-      <div className="landing-content">
-        <button onClick={handleGoogleLogin} className="banana-slug-button">
-          sign up / sign in
-        </button>
-        <p className="ucsc-warning">must have a @ucsc.edu email</p>
+        <div className="landingContent">
+          <button onClick={handleGoogleLogin} className="bananaSlugButton">
+            sign up / sign in
+          </button>
+          <p className="ucscWarning">must have @ucsc.edu email</p>
+        </div>
       </div>
     </div>
   );

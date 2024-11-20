@@ -1,124 +1,70 @@
-/* LandingPage.css */
-body,
-html {
-  height: 100%;
-  margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.no-scroll {
-  overflow: hidden;
-}
-
-.landing-container {
+.landing-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #fffbea;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 20px;
-  flex-direction: column;
-  background-image: url("../images/slugmartBIG.jpg");
-}
-
-.landing-container:before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background-image: inherit;
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
+  background-color: #f0f2f5;
 }
 
-@media (min-width: 768px) {
-  .landing-container {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1200px) {
-  .landing-container {
-    flex-direction: row;
-  }
-}
-
-.landing-content {
-  width: 30rem;
-  height: 15rem;
+.landingContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.flexContainer {
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  z-index: 10;
-  margin: 20px;
 }
 
-.landing-content h1 {
-  font-size: 2.5rem;
+.fbLogo h1 {
+  font-size: 60px;
   color: #1877f2;
+  margin-bottom: 0;
 }
 
-.banana-slug-button {
-  display: inline-block;
-  padding: 15px 30px;
-  font-size: 1.5rem;
-  color: #fff;
-  background-color: #1877f2;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
+.fbLogo p {
+  font-size: 24px;
+  color: #606770;
+  margin-top: 10px;
 }
 
-.banana-slug-button:hover {
-  background-color: #165bb2;
-}
-
-.ucsc-warning {
-  padding-bottom: 20px;
-  color: #ff0000;
-  font-size: 10px;
-}
-
-.flex-container {
+.landingContent {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+}
+
+.bananaSlugButton {
+  background-color: #1877f2;
+  color: white;
+  padding: 15px 25px;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   margin-bottom: 20px;
 }
 
-.fb-logo {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  padding: 20px;
+.bananaSlugButton:hover {
+  background-color: #145dbf;
+}
+
+.ucscWarning {
+  color: #606770;
+  font-size: 14px;
   text-align: center;
-  margin-top: 15px;
-  margin: 20px;
-  color: #1877f2;
 }
 
-.flex-box i {
-  font-size: 2.5rem;
-  color: #f8b400;
-  margin-bottom: 5px;
-}
-
-.flex-box h3 {
-  font-size: 1.5rem;
-  color: #1877f2;
-}
-
-.flex-box p {
-  font-size: 1rem;
-  color: #1877f2;
+.noScroll {
+  overflow: hidden;
 }
