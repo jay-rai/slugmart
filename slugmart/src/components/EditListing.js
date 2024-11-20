@@ -107,6 +107,10 @@ function EditListing() {
       setCurrentIndex(0);
     },
   });
+  const handleMoveItem = (fromIndex, toIndex) => {
+    moveItem(fromIndex, toIndex, imagePreviews, setImagePreviews);
+    moveItem(fromIndex, toIndex, images, setImages); // Sync both states
+  };
 
   const handleListingSubmit = async (e) => {
     e.preventDefault();
@@ -241,14 +245,7 @@ function EditListing() {
                   id={index}
                   preview={preview}
                   index={index}
-                  moveItem={(fromIndex, toIndex) =>
-                    moveItem(
-                      fromIndex,
-                      toIndex,
-                      imagePreviews,
-                      setImagePreviews
-                    )
-                  }
+                  moveItem={handleMoveItem}
                   selectThumbnail={(index) =>
                     selectThumbnail(
                       index,

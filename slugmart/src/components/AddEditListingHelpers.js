@@ -1,15 +1,10 @@
 // listingHelpers.js
 
-export const moveItem = (
-  fromIndex,
-  toIndex,
-  imagePreviews,
-  setImagePreviews
-) => {
-  const updatedPreviews = [...imagePreviews];
-  const [movedItem] = updatedPreviews.splice(fromIndex, 1);
-  updatedPreviews.splice(toIndex, 0, movedItem);
-  setImagePreviews(updatedPreviews);
+export const moveItem = (fromIndex, toIndex, image, setImage) => {
+  const updatedImage = [...image];
+  const [movedItem] = updatedImage.splice(fromIndex, 1);
+  updatedImage.splice(toIndex, 0, movedItem);
+  setImage(updatedImage);
 };
 
 export const deleteImage = (
@@ -22,7 +17,6 @@ export const deleteImage = (
 ) => {
   const newImages = images.filter((_, i) => i !== index);
   const newPreviews = imagePreviews.filter((_, i) => i !== index);
-
   setImages(newImages);
   setImagePreviews(newPreviews);
   setCurrentIndex(newPreviews.length > 0 ? 0 : -1);
