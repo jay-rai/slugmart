@@ -4,12 +4,12 @@ import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import Navbar from "./Navbar";
 import { handleLogout } from "../authUtil/logOut";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 import "./ListingsPage.css";
 
 function ListingsPage() {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
-  // states for searching
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredListings, setFilteredListings] = useState([]);
   const [filterCategory, setFilterCategory] = useState("");
@@ -17,6 +17,7 @@ function ListingsPage() {
   const [bottomPrice, setBottomPrice] = useState("");
   const [topPrice, setTopPrice] = useState("");
   const [newToOld, setNewToOld] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const listCategories = [
     "Books",
@@ -41,7 +42,7 @@ function ListingsPage() {
     const listingsList = await Promise.all(
       listingSnapshot.docs.map(async (listingDoc) => {
         const data = listingDoc.data();
-        const ownerRef = doc(db, "users", data.ownerId); // Correct Firestore doc reference
+        const ownerRef = doc(db, "users", data.ownerId);
         const ownerDoc = await getDoc(ownerRef);
         const ownerData = ownerDoc.exists() ? ownerDoc.data() : null;
         return { id: listingDoc.id, ...data, owner: ownerData };
@@ -59,28 +60,28 @@ function ListingsPage() {
     const filtered = listings.filter((listing) => {
       const searchLower = searchQuery.toLowerCase();
       const withinPrice =
-        (bottomPrice == "" || +(listing.price) >= +(bottomPrice)) &&
-        (topPrice == "" || +(listing.price) <= +(topPrice));
+        (bottomPrice === "" || +listing.price >= +bottomPrice) &&
+        (topPrice === "" || +listing.price <= +topPrice);
 
       return (
         (listing.title.toLowerCase().includes(searchLower) ||
           listing.description.toLowerCase().includes(searchLower)) &&
-        (filterCategory == "" || listing.category == filterCategory) &&
+        (filterCategory === "" || listing.category === filterCategory) &&
         withinPrice
       );
     });
 
-    if (newToOld)
-      setFilteredListings(filtered.reverse());
-    else
-      setFilteredListings(filtered);
-  
+    if (newToOld) setFilteredListings(filtered.reverse());
+    else setFilteredListings(filtered);
   }, [searchQuery, listings, filterCategory, bottomPrice, topPrice, newToOld]);
 
-  // Ensures all text typed is a number for the price filter
   const onlyNumbers = (event) => {
-    if (isNaN(event.key) && event.key != 'Backspace' &&
-        event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+    if (
+      isNaN(event.key) &&
+      event.key !== "Backspace" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
       event.preventDefault();
     }
   };
@@ -88,89 +89,171 @@ function ListingsPage() {
   const handleCategoryClick = (category) => {
     setFilterCategory(category);
     setActiveCategory(category);
+    setSidebarOpen(false);
   };
 
   return (
-    <div>
+    <div className="ListingsPage">
       <Navbar handleLogout={handleLogout(navigate)} />
-
-      <div className="ListingsPage-content">
-
-        <div className="ListingsPage-sidebar">
-          <strong> Filters </strong>
-          <div className="ListingsPage-price-container">
-            <label> Filter By Price </label>
-            <div className="ListingsPage-price-row">
-              <input
-                type="text"
-                value={bottomPrice}
-                placeholder="min"
-                onChange={(e) => setBottomPrice(e.target.value)}
-                onKeyDown={onlyNumbers}
-                className="ListingsPage-form-input"
+      <div className="MainContent">
+        {isMobile ? (
+          <>
+            <button
+              className="ListingsPage-sidebar-toggle"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? "Close Filter" : "Open Filter"}
+            </button>
+            <div
+              className={`ListingsPage-sidebar ${sidebarOpen ? "open" : ""}`}
+            >
+              <h1>Filters</h1>
+              <div className="ListingsPage-search-bar">
+                <input
+                  type="text"
+                  placeholder="Search listings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
+              </div>
+              <div className="ListingsPage-price-container">
+                <label>Filter By Price</label>
+                <div className="ListingsPage-price-row">
+                  <input
+                    type="text"
+                    value={bottomPrice}
+                    placeholder="min"
+                    onChange={(e) => setBottomPrice(e.target.value)}
+                    onKeyDown={onlyNumbers}
+                    className="ListingsPage-form-input"
+                  />
+                  <input
+                    type="text"
+                    value={topPrice}
+                    placeholder="max"
+                    onChange={(e) => setTopPrice(e.target.value)}
+                    onKeyDown={onlyNumbers}
+                    className="ListingsPage-form-input"
+                  />
+                </div>
+                <button
+                  className={`ListingsPage-category-button ${
+                    newToOld ? "ListingsPage-category-button--active" : ""
+                  }`}
+                  onClick={() => setNewToOld(true)}
+                >
+                  Newest To Oldest
+                </button>
+                <button
+                  className={`ListingsPage-category-button ${
+                    !newToOld ? "ListingsPage-category-button--active" : ""
+                  }`}
+                  onClick={() => setNewToOld(false)}
+                >
+                  Oldest To Newest
+                </button>
+              </div>
+              <strong>Categories</strong>
+              <button
+                className={`ListingsPage-category-button ${
+                  activeCategory === ""
+                    ? "ListingsPage-category-button--active"
+                    : ""
+                }`}
+                onClick={() => handleCategoryClick("")}
+              >
+                Show All
+              </button>
+              {listCategories.map((category) => (
+                <button
+                  key={category}
+                  className={`ListingsPage-category-button ${
+                    activeCategory === category
+                      ? "ListingsPage-category-button--active"
+                      : ""
+                  }`}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="ListingsPage-sidebar open">
+            <h1>Filters</h1>
+            <div className="ListingsPage-search-bar">
               <input
                 type="text"
-                value={topPrice}
-                placeholder="max"
-                onChange={(e) => setTopPrice(e.target.value)}
-                onKeyDown={onlyNumbers}
-                className="ListingsPage-form-input"
+                placeholder="Search listings..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-          <button
-            className={`ListingsPage-category-button ${
-              newToOld == true ? "ListingsPage-category-button--active" : ""
-            }`}
-            onClick={() => setNewToOld(true)}>
-
-            Newest To Oldest
-          </button>
-          <button
-            className={`ListingsPage-category-button ${
-              newToOld == false ? "ListingsPage-category-button--active" : ""
-            }`}
-            onClick={() => setNewToOld(false)}>
-
-            Oldest To Newest
-          </button>
-          </div>
-
-          <strong> Categories </strong>
-          <button
-            className={`ListingsPage-category-button ${
-              activeCategory == "" ? "ListingsPage-category-button--active" : ""
-            }`}
-            onClick={() => handleCategoryClick("")}
-          >
-            Show All
-          </button>
-          {listCategories.map((category) => (
+            <div className="ListingsPage-price-container">
+              <label>Filter By Price</label>
+              <div className="ListingsPage-price-row">
+                <input
+                  type="text"
+                  value={bottomPrice}
+                  placeholder="min"
+                  onChange={(e) => setBottomPrice(e.target.value)}
+                  onKeyDown={onlyNumbers}
+                  className="ListingsPage-form-input"
+                />
+                <input
+                  type="text"
+                  value={topPrice}
+                  placeholder="max"
+                  onChange={(e) => setTopPrice(e.target.value)}
+                  onKeyDown={onlyNumbers}
+                  className="ListingsPage-form-input"
+                />
+              </div>
+              <button
+                className={`ListingsPage-category-button ${
+                  newToOld ? "ListingsPage-category-button--active" : ""
+                }`}
+                onClick={() => setNewToOld(true)}
+              >
+                Newest To Oldest
+              </button>
+              <button
+                className={`ListingsPage-category-button ${
+                  !newToOld ? "ListingsPage-category-button--active" : ""
+                }`}
+                onClick={() => setNewToOld(false)}
+              >
+                Oldest To Newest
+              </button>
+            </div>
+            <strong>Categories</strong>
             <button
-              key={category}
               className={`ListingsPage-category-button ${
-                activeCategory == category
+                activeCategory === ""
                   ? "ListingsPage-category-button--active"
                   : ""
               }`}
-              onClick={() => handleCategoryClick(category)}
+              onClick={() => handleCategoryClick("")}
             >
-              {category}
+              Show All
             </button>
-          ))}
-        </div>
-
-        <div className="ListingsPage-browse-container">
-          <h1>Browse Listings</h1>
-          <div className="ListingsPage-search-bar">
-            <input
-              type="text"
-              placeholder="Search listings..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            {listCategories.map((category) => (
+              <button
+                key={category}
+                className={`ListingsPage-category-button ${
+                  activeCategory === category
+                    ? "ListingsPage-category-button--active"
+                    : ""
+                }`}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-
+        )}
+        <div className="ListingsPage-content">
           <div className="ListingsPage-listings-grid">
             {filteredListings.map((listing) => (
               <div
@@ -186,12 +269,14 @@ function ListingsPage() {
                   />
                 </div>
                 <div className="ListingsPage-listing-price">
-                  <strong>$ {listing.price}</strong>
+                  <strong>${listing.price}</strong>
                 </div>
-                <div className="ListingsPage-listing-title">{listing.title}</div>
+                <div className="ListingsPage-listing-title">
+                  {listing.title}
+                </div>
               </div>
             ))}
-          </div>  
+          </div>
         </div>
       </div>
     </div>
