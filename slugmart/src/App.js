@@ -1,4 +1,5 @@
 import "./App.css";
+// eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from "react";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
@@ -12,6 +13,7 @@ import ViewListing from "./components/ViewListing.js";
 import UserMessages from "./components/UserMessages.js";
 
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [user, setUser] = useState(null);
 
   return (

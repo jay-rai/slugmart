@@ -47,7 +47,7 @@ function AccountPage(){
         return () => listener();
     }, [navigate]);
 
-
+    // eslint-disable-next-line no-unused-vars
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -57,7 +57,7 @@ function AccountPage(){
         } catch (error) {
             console.error("error updating profile", error)
         }
-    
+
     }
 
     if (loading) {
