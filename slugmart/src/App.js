@@ -1,5 +1,4 @@
 import "./App.css";
-// eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from "react";
 import LandingPage from "./components/LandingPage";
 import AccountPage from "./components/AccountPage";
