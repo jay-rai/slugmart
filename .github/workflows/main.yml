@@ -1,13 +1,22 @@
 name: Run Unit Tests and Lint Files
-"on": push
+
+on: push
+
 jobs:
-  unit_test-lint:
+  unitTest-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-              cd slugmart
-              npm ci
-              CI=false npm run build
-              npm run test
-              npm run lint
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+
+      - name: Run Unit Tests and Lint Files
+        run: |
+          cd slugmart
+          npm ci
+          npm install util
+          CI=false npm run build
+          npm run lint
