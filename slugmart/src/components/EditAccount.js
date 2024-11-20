@@ -1,20 +1,18 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { handleLogout } from "../authUtil/logOut";
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc, setDoc, query, getDocs, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../config/firebase-config";
+import "./EditAccount.css";
 
-
-
-function EditAccount() {  // Accept user as a prop
+function EditAccount() {
     const navigate = useNavigate();
     const [location, setLocation] = useState('');
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Fetch data from Firestore
-    const fetchUserData  = async (uid) => {
+    const fetchUserData = async (uid) => {
         const userRef = doc(db, 'users', uid);
         const userDoc = await getDoc(userRef);
         if (userDoc.exists()) {
@@ -52,26 +50,33 @@ function EditAccount() {  // Accept user as a prop
         }
     };
 
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <div>
             <Navbar handleLogout={handleLogout(navigate)} />
-            <p>{user?.location}</p> {/* Make sure to handle the case where user is null */}
-            <form onSubmit={handleFormSubmit} className="profile-form">
-                <div className="form-group">
-                    <label htmlFor="location">Location</label>
-                    <input
-                        type="text"
-                        id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Where are you located? (College Name/Off Campus)"
-                        className="form-input"
-                    />
-                </div>
-                <button type="submit" className="submit-button">
-                    Save Changes
-                </button>
-            </form>
+            <div className="edit-account-container">
+                <form onSubmit={handleFormSubmit} className="edit-account-form">
+                    <div>
+                        <label htmlFor="location" className="edit-account-label">
+                            Location
+                        </label>
+                        <input
+                            type="text"
+                            id="location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            placeholder="Where are you? (College Name/Off Campus)"
+                            className="edit-account-input"
+                        />
+                    </div>
+                    <button type="submit" className="edit-account-button">
+                        Save Changes
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
