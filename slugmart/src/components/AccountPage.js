@@ -115,7 +115,7 @@ function AccountPage(){
                 <div className="account-listing-grid">
                     {listings.length > 0 ? (
                         listings.map(listing => (
-                            <div key={listing.id} className="account-listing-card" onClick={() => handleEditListing(listing.id)}>
+                            <div key={listing.id} className="account-listing-card">
                                 <img src={listing.images[0]} alt={listing.title} className="account-listing-image" />
                                 <h3>{listing.title}</h3>
                                 <p>{listing.description}</p>
@@ -126,6 +126,9 @@ function AccountPage(){
                                 <div className="account-listing-actions">
                                     <button onClick={() => handleMarkAsSold(listing.id)} className="account-listing-button action-button sold">
                                         Mark as Sold
+                                    </button>
+                                    <button onClick={() => handleEditListing(listing.id)} className="account-listing-button action-button sold">
+                                        Edit
                                     </button>
                                     <button onClick={() => handleRemoveListing(listing.id)} className="account-listing-button action-button remove">
                                         Remove
