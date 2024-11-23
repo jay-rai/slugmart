@@ -201,7 +201,7 @@ function UserMessages() {
                                         <div key={msg.id} className={`chat-message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`}>
                                             <p className='chat-message-content'>{msg.content}</p>
                                         </div>
-                                        <div className='chat-message-time-stamp'>"Time Stamp"</div>
+                                        <div className='chat-message-time-stamp'>Time Stamp</div>
                                     </>
                                 ))}
                             </div>
