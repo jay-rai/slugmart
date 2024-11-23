@@ -173,6 +173,11 @@ function UserMessages() {
                             className={`conversation-item ${selectedConversation?.id === conv.id ? 'selected' : ''}`}
                             onClick={() => handleSelectConversation(conv)}
                         >
+                            {
+                            // need to add user's profile picture right here
+                            // <img className='UserMessage-profile-pic' >
+                            }
+                            <img src={conv.photoURL} alt="profile pic " />
                             <p><strong>{conv.otherUserName}: &nbsp; </strong></p>
                             <p>{conv.latestMessage ? `${conv.latestMessage.slice(0, 10)}...` : ''}</p> {/* Truncate message preview */}
                             <button 
@@ -192,9 +197,12 @@ function UserMessages() {
                         <>
                             <div className="chat-messages">
                                 {messages.map((msg) => (
-                                    <div key={msg.id} className={`chat-message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`}>
-                                        <p>{msg.content}</p>
-                                    </div>
+                                    <>
+                                        <div key={msg.id} className={`chat-message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`}>
+                                            <p className='chat-message-content'>{msg.content}</p>
+                                        </div>
+                                        <div className='chat-message-time-stamp'>"Time Stamp"</div>
+                                    </>
                                 ))}
                             </div>
                             <div className="chat-input">

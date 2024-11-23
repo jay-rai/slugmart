@@ -54,13 +54,23 @@
 }
 
 .chat-message.sent {
-    background-color: #daf8e3;
+    background-color: #147efb;
     align-self: flex-end;
+    border-radius: 300px;
+    margin-top: 30px;
+    margin-left: 300px;
 }
 
 .chat-message.received {
-    background-color: #eee;
+    background-color: #8e8e93;
     align-self: flex-start;
+    border-radius: 300px;
+    margin-right: 300px;
+    margin-bottom: 30px;
+}
+
+.chat-message-content{
+    color: white;
 }
 
 .chat-input {
