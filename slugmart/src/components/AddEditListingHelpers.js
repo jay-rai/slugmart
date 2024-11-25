@@ -1,5 +1,3 @@
-// listingHelpers.js
-
 export const moveItem = (fromIndex, toIndex, image, setImage) => {
   const updatedImage = [...image];
   const [movedItem] = updatedImage.splice(fromIndex, 1);

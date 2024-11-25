@@ -18,6 +18,7 @@ import {
   selectThumbnail,
 } from "./AddEditListingHelpers";
 import DragItem from "./DragItem";
+import Popup from "./Popup";
 import "./AddEditListing.css";
 
 function AddListing() {
@@ -30,6 +31,7 @@ function AddListing() {
   const [category, setCategory] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const listCategories = [
     "Books",
@@ -47,7 +49,6 @@ function AddListing() {
     "Computers/Tablets",
   ];
   const [condition, setCondition] = useState("");
-
   const navigate = useNavigate();
 
   // https://react-dropzone.js.org/
@@ -134,14 +135,25 @@ function AddListing() {
       createdAt: new Date(),
     });
 
-    alert("Listing added!");
     setUploading(false);
-    navigate("/");
+    setPopupVisible(true);
+    setTimeout(() => {
+      navigate("/browse");
+    }, 3000); // Redirect after 3 seconds
   };
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
       <div className="add-listing-container">
+        {popupVisible && (
+          <Popup
+            message="Listing added!"
+            onClose={() => {
+              setPopupVisible(false);
+              navigate("/");
+            }}
+          />
+        )}
         <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
           {imagePreviews.length < 5 && (
@@ -255,6 +267,7 @@ function AddListing() {
               onChange={(e) => setPrice(e.target.value)}
               className="form-input"
               required
+              max="1000000"
             />
           </div>
 

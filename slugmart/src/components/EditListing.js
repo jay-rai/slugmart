@@ -19,6 +19,7 @@ import {
 } from "./AddEditListingHelpers";
 import DragItem from "./DragItem";
 import "./AddEditListing.css";
+import Popup from "./Popup";
 
 function EditListing() {
   const { id } = useParams();
@@ -34,7 +35,7 @@ function EditListing() {
   const [condition, setCondition] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
-
+  const [popupVisible, setPopupVisible] = useState(false);
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -107,6 +108,7 @@ function EditListing() {
       setCurrentIndex(0);
     },
   });
+
   const handleMoveItem = (fromIndex, toIndex) => {
     moveItem(fromIndex, toIndex, imagePreviews, setImagePreviews);
     moveItem(fromIndex, toIndex, images, setImages); // Sync both states
@@ -159,10 +161,11 @@ function EditListing() {
       condition,
       images: newImageUrls,
     });
-
-    alert("Listing updated!");
     setUploading(false);
-    navigate("/account");
+    setPopupVisible(true);
+    setTimeout(() => {
+      navigate("/account");
+    }, 3000); // Redirect after 3 seconds
   };
 
   if (loading) {
@@ -173,6 +176,15 @@ function EditListing() {
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
       <div className="add-listing-container">
+        {popupVisible && (
+          <Popup
+            message="Listing Edited!"
+            onClose={() => {
+              setPopupVisible(false);
+              navigate("/");
+            }}
+          />
+        )}
         <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
           {imagePreviews.length < 5 && (
@@ -279,6 +291,7 @@ function EditListing() {
               onChange={(e) => setPrice(e.target.value)}
               className="form-input"
               required
+              max="1000000"
             />
           </div>
 
