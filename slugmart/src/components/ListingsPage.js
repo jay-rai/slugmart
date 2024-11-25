@@ -255,27 +255,31 @@ function ListingsPage() {
         )}
         <div className="ListingsPage-content">
           <div className="ListingsPage-listings-grid">
-            {filteredListings.map((listing) => (
-              <div
-                key={listing.id}
-                className="ListingsPage-listing-card"
-                onClick={() => navigate(`/view-listing/${listing.id}`)}
-              >
-                <div className="ListingsPage-listing-image-container">
-                  <img
-                    src={listing.images[0]}
-                    alt={listing.title}
-                    className="ListingsPage-listing-image"
-                  />
+            {filteredListings.length > 0 ? (
+              filteredListings.map((listing) => (
+                <div
+                  key={listing.id}
+                  className="ListingsPage-listing-card"
+                  onClick={() => navigate(`/view-listing/${listing.id}`)}
+                >
+                  <div className="ListingsPage-listing-image-container">
+                    <img
+                      src={listing.images[0]}
+                      alt={listing.title}
+                      className="ListingsPage-listing-image"
+                    />
+                  </div>
+                  <div className="ListingsPage-listing-price">
+                    <strong>${listing.price}</strong>
+                  </div>
+                  <div className="ListingsPage-listing-title">
+                    {listing.title}
+                  </div>
                 </div>
-                <div className="ListingsPage-listing-price">
-                  <strong>${listing.price}</strong>
-                </div>
-                <div className="ListingsPage-listing-title">
-                  {listing.title}
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <h2>No listings found</h2>
+            )}
           </div>
         </div>
       </div>
