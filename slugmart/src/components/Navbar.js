@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Navbar.css";
-import logo from "../images/slugmartLogo2.jpeg";
+import logo from "../images/slugmartNavbarLogo.png";
 
 function Navbar({ handleLogout }) {
   const [isMobile, setIsMobile] = useState(false);
