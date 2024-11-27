@@ -1,0 +1,33 @@
+name: CICD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build the docker image
+        run: docker build -t jarai/slugmart .
+      - name: Publish image to docker hub
+        run: docker push jarai/slugmart:latest
+
+  deploy:
+    needs: build 
+    runs-on: aws-ec2
+    steps:
+      - name: Pull image from Docker Hub
+        run: docker pull jarai/slugmart:latest
+      - name: Delete old container (if exists)
+        run: |
+          docker rm -f slugmart-container || echo "No existing container to remove"
+      - name: Run Docker container
+        run: |
+          docker run -d -p 3000:3000 --name slugmart-container jarai/slugmart || echo "Failed to start the container"
+      - name: Check running containers
+        run: docker ps
