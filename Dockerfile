@@ -1,7 +1,7 @@
 FROM node:18.17.1
 WORKDIR /slugmart/slugmart
-COPY slugmart/package.json ./
+COPY slugmart/slugmart/package.json ./
 RUN npm install
-COPY . .
+COPY slugmart/slugmart/ ./
 EXPOSE 3000
 CMD ["npm", "run", "start"]
