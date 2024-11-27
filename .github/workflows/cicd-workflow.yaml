@@ -1,0 +1,26 @@
+name: CICD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Pull the Docker image
+        run: docker pull jarai/slugmart:latest
+      - name: Stop and remove the old container
+        run: |
+          docker stop slugmart || true
+          docker rm slugmart || true
+      - name: Run the new container
+        run: |
+          docker run -d --name slugmart -p 80:80 jarai/slugmart:latest
+
+deploy:
+  needs: build 
+  runs-on: [aws-ec2]

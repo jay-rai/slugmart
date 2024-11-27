@@ -7,6 +7,19 @@ import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import "./ListingsPage.css";
 
+const fetchListings = async () => {
+  try {
+    const listingsSnapshot = await getDocs(collection(db, 'listings'));
+    const listings = listingsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log('Listings:', listings);
+  } catch (error) {
+    console.error('Error fetching listings:', error);
+  }
+};
+
 function ListingsPage() {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
