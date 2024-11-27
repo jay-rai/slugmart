@@ -1,5 +1,5 @@
 FROM node:18.17.1
-WORKDIR /app/slugmart
+WORKDIR /app/slugmart/slugmart
 COPY package.json ./
 RUN npm install
 COPY . .
