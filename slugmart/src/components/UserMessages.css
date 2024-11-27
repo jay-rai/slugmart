@@ -14,11 +14,28 @@
 @media (max-width: 768px) {
     .user-messages-container-centered {
         display: grid;
-        width: 90%;
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
         height: auto;
         background-color: #fff;
+    }
+
+    .chat-container {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 10px;
+        height: 100%;
+        box-sizing: border-box;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .chat-input {
+        position: sticky;
+        bottom: 0;
+        background-color: white;
     }
 }
 
@@ -54,8 +71,11 @@
     width: 70%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
 }
 
 @media (max-width: 768px) {
@@ -110,6 +130,8 @@
     margin-top: 10px;
     max-width: 70%;
     padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     word-wrap: break-word;
     color: white;
     margin-left: 10%;
@@ -122,6 +144,8 @@
     margin-top: 10px;
     max-width: 70%;
     padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     word-wrap: break-word;
     color: black;
     margin-right: 10%;
@@ -131,11 +155,12 @@
     .chat-message.sent,
     .chat-message.received {
         max-width: 85%;
-        padding: 8px;
+        padding-top: 0px;
+        padding-bottom: 0px;
     }
 
     .chat-message.sent {
-        margin-left: 5%;
+        margin-right: 3%;
     }
 
     .chat-message.received {
@@ -148,6 +173,8 @@
     .chat-message.received {
         max-width: 90%;
         padding: 8px;
+        padding-top: 0px;
+        padding-bottom: 0px;
     }
 
     .chat-message.sent {
@@ -194,7 +221,7 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     font-size: 14px;
-    width: calc(100% - 20px);
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -212,21 +239,26 @@
 @media (max-width: 580px) {
     .chat-input {
         width: 100%;
-        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
     }
 
     .chat-input input {
-        width: 100%;
-        margin-bottom: 10px;
+        width: 80%;
+        margin-right: 10px;
     }
 
     .chat-input button {
-        width: 100%;
-        margin-left: 0;
+        width: auto;
+        margin-right: 3%;
     }
 }
 
 @media (max-width: 768px) {
+    .chat-container {
+        height: 50vh;
+    }
     .chat-input {
         padding: 8px;
     }
@@ -238,6 +270,7 @@
     .chat-input button {
         padding: 8px 16px;
         font-size: 14px;
+        margin-right: 3%;
     }
 }
 
@@ -251,6 +284,9 @@
     .chat-container {
         width: 100%;
         padding: 10px;
+    }
+    .chat-messages {
+        max-height: calc(70vh - 120px);
     }
 }
 

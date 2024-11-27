@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';  // Import useRef to reference the chat messages container
 import { useLocation } from 'react-router-dom';
 import { db, auth } from '../config/firebase-config';
 import { collection, doc, addDoc, deleteDoc, query, where, onSnapshot, orderBy, serverTimestamp, updateDoc, getDoc, getDocs } from 'firebase/firestore';
@@ -14,6 +14,8 @@ function UserMessages() {
     const [newMessage, setNewMessage] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const location = useLocation();
+
+    const messagesEndRef = useRef(null); // Create a reference for the end of the chat messages container
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -157,6 +159,21 @@ function UserMessages() {
         }
     }, [location.state, currentUser, conversations]);
 
+    // Function that allows the user's to press Enter to send messsage
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    // Scrolls down to the latest messages
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]); 
+
     if (!currentUser) {
         return <p>Please log in to view your messages.</p>;
     }
@@ -192,18 +209,18 @@ function UserMessages() {
                         <>
                             <div className="chat-messages">
                                 {messages.map((msg) => (
-                                    <>
-                                        <div key={msg.id} className={`chat-message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`}>
-                                            <p className='chat-message-content'>{msg.content}</p>
-                                        </div>
-                                    </>
+                                    <div key={msg.id} className={`chat-message ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`}>
+                                        <p className='chat-message-content'>{msg.content}</p>
+                                    </div>
                                 ))}
+                                <div ref={messagesEndRef} />
                             </div>
                             <div className="chat-input">
                                 <input
                                     type="text"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                     placeholder="Type a message..."
                                 />
                                 <button onClick={handleSendMessage}>Send</button>
