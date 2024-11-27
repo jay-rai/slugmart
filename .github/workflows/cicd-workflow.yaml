@@ -16,13 +16,13 @@ jobs:
       - name: Publish image to docker hub
         run: docker push jarai/slugmart:latest
 
-deploy:
-  needs: build 
-  runs-on: [self-hosted, aws-ec2]
-  steps:
-    - name: Pull image from docker
-      run: docker pull jarai/slugmart:latest
-    - name: Delete old container
-      run: docker rm -f slugmart-container
-    - name: Run docker container
-      run: docker run -d -p 3000:3000 --name slugmart-container jarai/slugmart
+  deploy:
+    needs: build 
+    runs-on: [self-hosted, aws-ec2]
+    steps:
+      - name: Pull image from docker
+        run: docker pull jarai/slugmart:latest
+      - name: Delete old container
+        run: docker rm -f slugmart-container
+      - name: Run docker container
+        run: docker run -d -p 3000:3000 --name slugmart-container jarai/slugmart
