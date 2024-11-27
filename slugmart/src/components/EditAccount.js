@@ -9,6 +9,7 @@ import "./EditAccount.css";
 function EditAccount() {
     const navigate = useNavigate();
     const [location, setLocation] = useState('');
+    const [imageUrl, setImageUrl] = useState(''); // New state for image URL
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -18,6 +19,7 @@ function EditAccount() {
         if (userDoc.exists()) {
             const userData = userDoc.data();
             setLocation(userData.location || '');
+            setImageUrl(userData.imageUrl || ''); // Fetch the saved image URL
         }
     };
 
@@ -43,7 +45,7 @@ function EditAccount() {
 
         try {
             const userRef = doc(db, 'users', user.uid);
-            await setDoc(userRef, { location }, { merge: true });
+            await setDoc(userRef, { location, imageUrl }, { merge: true }); // Save both location and imageUrl
             alert('Profile updated!');
         } catch (error) {
             console.error("Error updating profile", error);
@@ -69,6 +71,19 @@ function EditAccount() {
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             placeholder="Where are you? (College Name/Off Campus)"
+                            className="edit-account-input"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="imageUrl" className="edit-account-label">
+                            Set Custom Profile Picture
+                        </label>
+                        <input
+                            type="text"
+                            id="imageUrl"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            placeholder="Enter an image URL to use for your new profile"
                             className="edit-account-input"
                         />
                     </div>

@@ -19,6 +19,7 @@ import Popup from "./Popup";
 function AccountPage() {
   const [user, setUser] = useState(null);
   const [location, setLocation] = useState("");
+  const [imageUrl, setImageUrl] = useState(""); // New state for the saved image URL
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popupMessage, setPopupMessage] = useState("");
@@ -32,12 +33,13 @@ function AccountPage() {
     if (userDoc.exists()) {
       const userData = userDoc.data();
       setLocation(userData.location || "");
+      setImageUrl(userData.imageUrl || ""); // Fetch and set the saved image URL
     }
     setLoading(false);
   };
 
   const fetchUserListings = async (uid) => {
-    const listingsCollection = collection(db, "listings");
+    const listingsCollection = collection(db, "listings"); 
     const q = query(listingsCollection, where("ownerId", "==", uid)); // Query where ownerId matches user's uid
     const querySnapshot = await getDocs(q);
     const userListings = querySnapshot.docs.map((doc) => ({
@@ -110,7 +112,7 @@ function AccountPage() {
           {user && (
             <>
               <img
-                src={user.photoURL}
+                src={imageUrl || user.photoURL} // Fallback to user.photoURL if imageUrl is not set
                 alt="Profile"
                 className="profile-image"
               />
