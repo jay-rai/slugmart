@@ -2,7 +2,7 @@
 FROM node:18.17.1
 
 # Set working directory
-WORKDIR /app/slugmart
+WORKDIR /app/slugmart/slugmart
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
