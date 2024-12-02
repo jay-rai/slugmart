@@ -13,7 +13,7 @@ RUN npm install
 # Copy the rest of the files
 COPY . .
 
-RUN npm run
+CMD ["npm", "run", "build"]
 
 # Expose port 3000
 EXPOSE 3000
