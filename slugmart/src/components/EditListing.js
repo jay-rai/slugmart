@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../config/firebase-config";
@@ -21,10 +21,76 @@ import DragItem from "./DragItem";
 import "./AddEditListing.css";
 import Popup from "./Popup";
 
-function EditListing() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+// Fetch data from Firestore
+const useFetchListingData = (id) => {
+  const [listingData, setListingData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchListingData = async () => {
+      try {
+        const listingRef = doc(db, "listings", id);
+        const listingDoc = await getDoc(listingRef);
+        if (listingDoc.exists()) {
+          setListingData(listingDoc.data());
+        } else {
+          console.error("Listing not found!");
+        }
+      } catch (error) {
+        console.error("Error fetching listing:", error);
+      }
+      setLoading(false);
+    };
+    fetchListingData();
+  }, [id]);
+
+  return { listingData, loading };
+};
+
+// Upload images to Firebase Storage
+const useImageUpload = () => {
+  const uploadImages = useCallback(async (images) => {
+    const newImageUrls = [];
+
+    for (let i = 0; i < images.length; i++) {
+      if (typeof images[i] === "string" && images[i].startsWith("http")) {
+        newImageUrls.push(images[i]);
+      } else {
+        const storageRef = ref(storage, `listingsImages/${images[i].name}`);
+        const uploadTask = uploadBytesResumable(storageRef, images[i]);
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            null,
+            (error) => {
+              console.error("Error uploading image:", error);
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              newImageUrls.push(downloadURL);
+              resolve();
+            }
+          );
+        });
+      }
+    }
+
+    return newImageUrls;
+  }, []);
+
+  return uploadImages;
+};
+
+function EditListing() {
+  // Get listing ID from URL
+  const { id } = useParams();
+  // State variables to store listing data, loading status, form data, and image previews
+  const navigate = useNavigate();
+  const { listingData, loading } = useFetchListingData(id);
+  const uploadImages = useImageUpload();
+  // Form
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -35,7 +101,9 @@ function EditListing() {
   const [condition, setCondition] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  // Popup state
   const [popupVisible, setPopupVisible] = useState(false);
+  // Categories
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -52,32 +120,21 @@ function EditListing() {
     "Computers/Tablets",
   ];
 
+  // Set form data when listing data is fetched
   useEffect(() => {
-    const fetchListingData = async () => {
-      try {
-        const listingRef = doc(db, "listings", id);
-        const listingDoc = await getDoc(listingRef);
-        if (listingDoc.exists()) {
-          const listingData = listingDoc.data();
-          setTitle(listingData.title);
-          setDescription(listingData.description);
-          setPrice(listingData.price);
-          setCategory(listingData.category);
-          setCondition(listingData.condition);
-          setImages(listingData.images || []);
-          setImagePreviews(listingData.images || []);
-          setCurrentIndex(0);
-        } else {
-          console.error("Listing not found!");
-        }
-      } catch (error) {
-        console.error("Error fetching listing:", error);
-      }
-      setLoading(false);
-    };
-    fetchListingData();
-  }, [id]);
+    if (listingData) {
+      setTitle(listingData.title);
+      setDescription(listingData.description);
+      setPrice(listingData.price);
+      setCategory(listingData.category);
+      setCondition(listingData.condition);
+      setImages(listingData.images || []);
+      setImagePreviews(listingData.images || []);
+      setCurrentIndex(0);
+    }
+  }, [listingData]);
 
+  // Dropzone for image uploads
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "image/jpeg": [], "image/png": [], "image/jpg": [] },
     maxFiles: 5 - images.length,
@@ -109,11 +166,13 @@ function EditListing() {
     },
   });
 
+  // Move images in the carousel
   const handleMoveItem = (fromIndex, toIndex) => {
     moveItem(fromIndex, toIndex, imagePreviews, setImagePreviews);
     moveItem(fromIndex, toIndex, images, setImages); // Sync both states
   };
 
+  // Submit edited listing
   const handleListingSubmit = async (e) => {
     e.preventDefault();
 
@@ -126,46 +185,27 @@ function EditListing() {
 
     setUploading(true);
 
-    const newImageUrls = [];
-    for (let i = 0; i < images.length; i++) {
-      if (typeof images[i] === "string" && images[i].startsWith("http")) {
-        newImageUrls.push(images[i]);
-      } else {
-        const storageRef = ref(storage, `listingsImages/${images[i].name}`);
-        const uploadTask = uploadBytesResumable(storageRef, images[i]);
+    try {
+      const newImageUrls = await uploadImages(images);
 
-        await new Promise((resolve, reject) => {
-          uploadTask.on(
-            "state_changed",
-            null,
-            (error) => {
-              console.error("Error uploading image:", error);
-              setUploading(false);
-              reject(error);
-            },
-            async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              newImageUrls.push(downloadURL);
-              resolve();
-            }
-          );
-        });
-      }
+      await updateDoc(listingRef, {
+        title,
+        description,
+        price,
+        category,
+        condition,
+        images: newImageUrls,
+      });
+
+      setPopupVisible(true);
+      setTimeout(() => {
+        navigate("/account");
+      }, 3000); // Redirect after 3 seconds
+    } catch (error) {
+      console.error("Error updating listing:", error);
+    } finally {
+      setUploading(false);
     }
-
-    await updateDoc(listingRef, {
-      title,
-      description,
-      price,
-      category,
-      condition,
-      images: newImageUrls,
-    });
-    setUploading(false);
-    setPopupVisible(true);
-    setTimeout(() => {
-      navigate("/account");
-    }, 3000); // Redirect after 3 seconds
   };
 
   if (loading) {

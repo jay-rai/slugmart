@@ -1,6 +1,7 @@
 import React from "react";
 import "./Popup.css";
 
+// Popup component to display a message w/ button.
 function Popup({ message, onClose }) {
   return (
     <div className="popup-overlay">

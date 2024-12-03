@@ -22,6 +22,7 @@ import Popup from "./Popup";
 import "./AddEditListing.css";
 
 function AddListing() {
+  // store the listing data in state variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -29,10 +30,13 @@ function AddListing() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
+  // carousel state variables
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  // popup state variable
   const [popupVisible, setPopupVisible] = useState(false);
-
+  // list of categories
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -48,9 +52,10 @@ function AddListing() {
     "Antiques",
     "Computers/Tablets",
   ];
-  const [condition, setCondition] = useState("");
+  // useNavigate hook to navigate to a different page
   const navigate = useNavigate();
 
+  // Dropzone hook to handle file uploads
   // https://react-dropzone.js.org/
   // https://stackoverflow.com/questions/53272513/async-image-gallery-in-react
   const { getRootProps, getInputProps } = useDropzone({
@@ -82,6 +87,7 @@ function AddListing() {
     },
   });
 
+  // form submission
   const handleListingSubmit = async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
@@ -123,6 +129,7 @@ function AddListing() {
       });
     }
 
+    // Add listing to Firestore
     const listingRef = doc(db, "listings", `${Date.now()}_${user.uid}`);
     await setDoc(listingRef, {
       title,
@@ -141,6 +148,7 @@ function AddListing() {
       navigate("/browse");
     }, 3000); // Redirect after 3 seconds
   };
+
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />

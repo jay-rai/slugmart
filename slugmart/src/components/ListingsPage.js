@@ -7,22 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import "./ListingsPage.css";
 
-const fetchListings = async () => {
-  try {
-    const listingsSnapshot = await getDocs(collection(db, 'listings'));
-    const listings = listingsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    console.log('Listings:', listings);
-  } catch (error) {
-    console.error('Error fetching listings:', error);
-  }
-};
-
 function ListingsPage() {
   const navigate = useNavigate();
+  // listings state
   const [listings, setListings] = useState([]);
+  // filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredListings, setFilteredListings] = useState([]);
   const [filterCategory, setFilterCategory] = useState("");
@@ -30,8 +19,9 @@ function ListingsPage() {
   const [bottomPrice, setBottomPrice] = useState("");
   const [topPrice, setTopPrice] = useState("");
   const [newToOld, setNewToOld] = useState(true);
+  // mobile sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  // filter categories
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -48,6 +38,7 @@ function ListingsPage() {
     "Computers/Tablets",
   ];
 
+  // fetch listings from Firestore
   const fetchListings = async () => {
     const listingsCollection = collection(db, "listings");
     const listingSnapshot = await getDocs(listingsCollection);
@@ -65,10 +56,12 @@ function ListingsPage() {
     setListings(listingsList);
   };
 
+  // fetch listings on component mount
   useEffect(() => {
     fetchListings();
   }, []);
 
+  // filter listings based on search query, category, price, and sort order
   useEffect(() => {
     const filtered = listings.filter((listing) => {
       const searchLower = searchQuery.toLowerCase();
@@ -88,6 +81,7 @@ function ListingsPage() {
     else setFilteredListings(filtered);
   }, [searchQuery, listings, filterCategory, bottomPrice, topPrice, newToOld]);
 
+  // prevent non-numeric input in price fields
   const onlyNumbers = (event) => {
     if (
       isNaN(event.key) &&
@@ -99,6 +93,7 @@ function ListingsPage() {
     }
   };
 
+  // handle categories
   const handleCategoryClick = (category) => {
     setFilterCategory(category);
     setActiveCategory(category);

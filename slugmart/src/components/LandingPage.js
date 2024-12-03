@@ -15,6 +15,7 @@ function LandingPage() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  // User login with Google
   const handleGoogleLogin = async () => {
     const authProvider = new GoogleAuthProvider();
     try {
@@ -32,6 +33,7 @@ function LandingPage() {
     }
   };
 
+  // Add user to db
   const addUserToDatabase = async (user) => {
     try {
       const userRef = doc(db, "users", user.uid);
@@ -45,6 +47,7 @@ function LandingPage() {
     }
   };
 
+  // Check if user is logged in, and if they have a ucsc email
   useEffect(() => {
     const listener = onAuthStateChanged(auth, (user) => {
       if (user && user.email.endsWith("@ucsc.edu")) {

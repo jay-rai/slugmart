@@ -1,3 +1,6 @@
+// helper functions for AddListing and EditListing components
+
+// move item in array
 export const moveItem = (fromIndex, toIndex, image, setImage) => {
   const updatedImage = [...image];
   const [movedItem] = updatedImage.splice(fromIndex, 1);
@@ -5,6 +8,7 @@ export const moveItem = (fromIndex, toIndex, image, setImage) => {
   setImage(updatedImage);
 };
 
+// delete image from array
 export const deleteImage = (
   index,
   images,
@@ -20,6 +24,7 @@ export const deleteImage = (
   setCurrentIndex(newPreviews.length > 0 ? 0 : -1);
 };
 
+// move carousel to previous image
 // https://stackoverflow.com/questions/77412887/the-counter-between-the-slide-and-the-buttons-below-isn-t-the-same-in-react-com
 export const beforeImage = (
   currentIndex,
@@ -34,6 +39,7 @@ export const beforeImage = (
   });
 };
 
+// move carousel to next image
 export const afterImage = (
   currentIndex,
   setCurrentIndex,
@@ -47,6 +53,7 @@ export const afterImage = (
   });
 };
 
+// select thumbnail image to drag and drop
 export const selectThumbnail = (
   index,
   setSelectedThumbnailIndex,
