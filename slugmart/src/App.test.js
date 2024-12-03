@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders learn react link', () => {
   render(<App />);
-  const Logintest = screen.getByText("Login");
-  expect(Logintest).toBeInTheDocument();
+  const Loginscreentest = screen.getByText("must have @ucsc.edu email");
+  expect(Loginscreentest).toBeInTheDocument();
 });
