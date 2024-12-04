@@ -16,6 +16,9 @@ import {
   beforeImage,
   afterImage,
   selectThumbnail,
+  onlyNumbers,
+  setLetterLimit,
+  validatePaste
 } from "./AddEditListingHelpers";
 import DragItem from "./DragItem";
 import Popup from "./Popup";
@@ -261,7 +264,11 @@ function AddListing() {
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 60);
+                setTitle(value.trimStart());
+              }}
+              onKeyDown={(e) => setLetterLimit(e, title, 60)}
               className="form-input"
               required
             />
@@ -273,9 +280,11 @@ function AddListing() {
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              onKeyDown={(e) => onlyNumbers(e, price)}
+              onPaste={(e) => validatePaste(e, setPrice, price)}
               className="form-input"
               required
-              max="1000000"
+              min="0"
             />
           </div>
 
@@ -283,7 +292,11 @@ function AddListing() {
             <label className="form-label">Description:</label>
             <textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 400);
+                setDescription(value.trimStart());
+              }}
+              onKeyDown={(e) => setLetterLimit(e, title, 400)}
               className="form-input"
               required
             />
@@ -335,7 +348,14 @@ function AddListing() {
               Other
             </button>
           </div>
-          <button type="submit" className="submit-button">
+          <button
+            type="submit"
+            className="submit-button"
+            onClick={(e) => {
+              setTitle(title.trim());
+              setDescription(description.trim());
+            }}
+          >
             {uploading ? "Uploading..." : "Update Listing"}
           </button>
         </form>

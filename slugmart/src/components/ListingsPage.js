@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import { handleLogout } from "../authUtil/logOut";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import {onlyNumbers, validatePaste} from "./AddEditListingHelpers";
 import "./ListingsPage.css";
 
 function ListingsPage() {
@@ -81,18 +82,6 @@ function ListingsPage() {
     else setFilteredListings(filtered);
   }, [searchQuery, listings, filterCategory, bottomPrice, topPrice, newToOld]);
 
-  // prevent non-numeric input in price fields
-  const onlyNumbers = (event) => {
-    if (
-      isNaN(event.key) &&
-      event.key !== "Backspace" &&
-      event.key !== "ArrowLeft" &&
-      event.key !== "ArrowRight"
-    ) {
-      event.preventDefault();
-    }
-  };
-
   // handle categories
   const handleCategoryClick = (category) => {
     setFilterCategory(category);
@@ -132,16 +121,20 @@ function ListingsPage() {
                     value={bottomPrice}
                     placeholder="min"
                     onChange={(e) => setBottomPrice(e.target.value)}
-                    onKeyDown={onlyNumbers}
+                    onKeyDown={(e) => onlyNumbers(e, bottomPrice)}
+                    onPaste={(e) => validatePaste(e, setBottomPrice, bottomPrice)}
                     className="ListingsPage-form-input"
+                    min="0"
                   />
                   <input
                     type="text"
                     value={topPrice}
                     placeholder="max"
                     onChange={(e) => setTopPrice(e.target.value)}
-                    onKeyDown={onlyNumbers}
+                    onKeyDown={(e) => onlyNumbers(e, topPrice)}
+                    onPaste={(e) => validatePaste(e, setTopPrice, topPrice)}
                     className="ListingsPage-form-input"
+                    min="0"
                   />
                 </div>
                 <button
@@ -206,16 +199,20 @@ function ListingsPage() {
                   value={bottomPrice}
                   placeholder="min"
                   onChange={(e) => setBottomPrice(e.target.value)}
-                  onKeyDown={onlyNumbers}
+                  onKeyDown={(e) => onlyNumbers(e, bottomPrice)}
+                  onPaste={(e) => validatePaste(e, setBottomPrice, bottomPrice)}
                   className="ListingsPage-form-input"
+                  min="0"
                 />
                 <input
                   type="text"
                   value={topPrice}
                   placeholder="max"
                   onChange={(e) => setTopPrice(e.target.value)}
-                  onKeyDown={onlyNumbers}
+                  onKeyDown={(e) => onlyNumbers(e, topPrice)}
+                  onPaste={(e) => validatePaste(e, setTopPrice, topPrice)}
                   className="ListingsPage-form-input"
+                  min="0"
                 />
               </div>
               <button

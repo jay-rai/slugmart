@@ -62,3 +62,56 @@ export const selectThumbnail = (
   setSelectedThumbnailIndex(index);
   setCurrentIndex(index);
 };
+
+// prevent non-numeric input in price fields
+export const onlyNumbers = (event, currentVal) => {
+  // Rejects non numericals
+  if (
+    isNaN(event.key) &&
+    event.key !== "Backspace" &&
+    event.key !== "ArrowLeft" &&
+    event.key !== "ArrowRight"
+  ) {
+    event.preventDefault();
+  }
+  
+  // Rejects if >9 digits
+  if (
+    currentVal.length >= 9 && 
+    event.key !== "Backspace" && 
+    !isNaN(event.key)
+  ) {
+    event.preventDefault();
+  }
+};
+
+// caps length of item titles and descriptions
+export const setLetterLimit = (event, text, cap) => {
+  if (
+    text.length >= cap && 
+    event.key !== "Backspace" && 
+    event.key != "Delete"
+  ) {
+    event.preventDefault();
+  }
+};
+
+// Validates pasted content so it doesn't violate our rules
+export const validatePaste = (event, setPrice, currentPrice) => {
+  const pastedData = event.clipboardData.getData("Text");
+  
+  // rejects if pasted data is not numerical only
+  if (!/^\d{1,9}$/.test(pastedData)) {
+    event.preventDefault();
+    return;
+  }
+
+  const combinedLength = currentPrice.length + pastedData.length;
+
+  // Checks if current Price + pasted digits are <9 digits
+  if (combinedLength > 9) {
+    event.preventDefault();
+  } else {
+    setPrice(combinedLength);
+  }
+};
