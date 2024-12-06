@@ -37,6 +37,7 @@ function LandingPage() {
       });
   };
 
+  // Add user to db
   const addUserToDatabase = async (user) => {
     try {
       const userRef = doc(db, "users", user.uid);
@@ -50,6 +51,7 @@ function LandingPage() {
     }
   };
 
+  // Check if user is logged in, and if they have a ucsc email
   useEffect(() => {
     const listener = onAuthStateChanged(auth, (user) => {
       if (user && user.email.endsWith("@ucsc.edu")) {

@@ -8,7 +8,10 @@ import "./ViewListing.css";
 import { auth } from "../config/firebase-config";
 
 function ViewListing() {
+  // Extract the listingId from URL params.
   const { listingId } = useParams();
+
+  // State variables to store listing data, loading status, owner data, current user, current image index, and selected thumbnail index.
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [owner, setOwner] = useState(null);
@@ -17,6 +20,7 @@ function ViewListing() {
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
   const navigate = useNavigate();
 
+  // Function to fetch the listing data from Firestore.
   const fetchListing = useCallback(async () => {
     try {
       const listingRef = doc(db, "listings", listingId);
@@ -42,6 +46,7 @@ function ViewListing() {
     }
   }, [listingId]);
 
+  // useEffect hook to fetch listing data and set current user on component mount.
   useEffect(() => {
     fetchListing();
     auth.onAuthStateChanged((user) => setCurrentUser(user));
@@ -55,6 +60,7 @@ function ViewListing() {
     return <p>Listing not found</p>;
   }
 
+  // Back button for carousel
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex =
@@ -64,6 +70,7 @@ function ViewListing() {
     });
   };
 
+  // Next button for carousel
   const handleNextClick = () => {
     setCurrentIndex((prevIndex) => {
       const newIndex =
@@ -73,11 +80,13 @@ function ViewListing() {
     });
   };
 
+  // Function to handle thumbnail click.
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index);
     setSelectedThumbnailIndex(index);
   };
 
+  // Message seller button handler
   const handleMessageSeller = () => {
     if (currentUser?.uid === owner?.uid) {
       alert("You cannot message yourself.");
@@ -144,7 +153,6 @@ function ViewListing() {
 
           {owner && (
             <div className="seller-info-container">
-
               <div className="seller-details">
                 <p className="seller-name">Seller: {owner.name}</p>
                 <p className="seller-location">{owner.location}</p>

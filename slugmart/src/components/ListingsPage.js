@@ -5,24 +5,14 @@ import Navbar from "./Navbar";
 import { handleLogout } from "../authUtil/logOut";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import {onlyNumbers, validatePaste} from "./AddEditListingHelpers";
 import "./ListingsPage.css";
-
-const fetchListings = async () => {
-  try {
-    const listingsSnapshot = await getDocs(collection(db, 'listings'));
-    const listings = listingsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    console.log('Listings:', listings);
-  } catch (error) {
-    console.error('Error fetching listings:', error);
-  }
-};
 
 function ListingsPage() {
   const navigate = useNavigate();
+  // listings state
   const [listings, setListings] = useState([]);
+  // filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredListings, setFilteredListings] = useState([]);
   const [filterCategory, setFilterCategory] = useState("");
@@ -30,8 +20,9 @@ function ListingsPage() {
   const [bottomPrice, setBottomPrice] = useState("");
   const [topPrice, setTopPrice] = useState("");
   const [newToOld, setNewToOld] = useState(true);
+  // mobile sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  // filter categories
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -48,6 +39,7 @@ function ListingsPage() {
     "Computers/Tablets",
   ];
 
+  // fetch listings from Firestore
   const fetchListings = async () => {
     const listingsCollection = collection(db, "listings");
     const listingSnapshot = await getDocs(listingsCollection);
@@ -65,10 +57,12 @@ function ListingsPage() {
     setListings(listingsList);
   };
 
+  // fetch listings on component mount
   useEffect(() => {
     fetchListings();
   }, []);
 
+  // filter listings based on search query, category, price, and sort order
   useEffect(() => {
     const filtered = listings.filter((listing) => {
       const searchLower = searchQuery.toLowerCase();
@@ -88,17 +82,7 @@ function ListingsPage() {
     else setFilteredListings(filtered);
   }, [searchQuery, listings, filterCategory, bottomPrice, topPrice, newToOld]);
 
-  const onlyNumbers = (event) => {
-    if (
-      isNaN(event.key) &&
-      event.key !== "Backspace" &&
-      event.key !== "ArrowLeft" &&
-      event.key !== "ArrowRight"
-    ) {
-      event.preventDefault();
-    }
-  };
-
+  // handle categories
   const handleCategoryClick = (category) => {
     setFilterCategory(category);
     setActiveCategory(category);
@@ -137,16 +121,20 @@ function ListingsPage() {
                     value={bottomPrice}
                     placeholder="min"
                     onChange={(e) => setBottomPrice(e.target.value)}
-                    onKeyDown={onlyNumbers}
+                    onKeyDown={(e) => onlyNumbers(e, bottomPrice)}
+                    onPaste={(e) => validatePaste(e, setBottomPrice, bottomPrice)}
                     className="ListingsPage-form-input"
+                    min="0"
                   />
                   <input
                     type="text"
                     value={topPrice}
                     placeholder="max"
                     onChange={(e) => setTopPrice(e.target.value)}
-                    onKeyDown={onlyNumbers}
+                    onKeyDown={(e) => onlyNumbers(e, topPrice)}
+                    onPaste={(e) => validatePaste(e, setTopPrice, topPrice)}
                     className="ListingsPage-form-input"
+                    min="0"
                   />
                 </div>
                 <button
@@ -211,16 +199,20 @@ function ListingsPage() {
                   value={bottomPrice}
                   placeholder="min"
                   onChange={(e) => setBottomPrice(e.target.value)}
-                  onKeyDown={onlyNumbers}
+                  onKeyDown={(e) => onlyNumbers(e, bottomPrice)}
+                  onPaste={(e) => validatePaste(e, setBottomPrice, bottomPrice)}
                   className="ListingsPage-form-input"
+                  min="0"
                 />
                 <input
                   type="text"
                   value={topPrice}
                   placeholder="max"
                   onChange={(e) => setTopPrice(e.target.value)}
-                  onKeyDown={onlyNumbers}
+                  onKeyDown={(e) => onlyNumbers(e, topPrice)}
+                  onPaste={(e) => validatePaste(e, setTopPrice, topPrice)}
                   className="ListingsPage-form-input"
+                  min="0"
                 />
               </div>
               <button

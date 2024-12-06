@@ -17,13 +17,18 @@ import "./AccountPage.css";
 import Popup from "./Popup";
 
 function AccountPage() {
+  // states for user, location, imageUrl, listings
   const [user, setUser] = useState(null);
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState(""); // New state for the saved image URL
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Popup message state
   const [popupMessage, setPopupMessage] = useState("");
   const [popupVisible, setPopupVisible] = useState(false);
+
+  // Navigate to other pages
   const navigate = useNavigate();
 
   // Fetch user data from database
@@ -38,8 +43,9 @@ function AccountPage() {
     setLoading(false);
   };
 
+  // Fetch user's listings from db
   const fetchUserListings = async (uid) => {
-    const listingsCollection = collection(db, "listings"); 
+    const listingsCollection = collection(db, "listings");
     const q = query(listingsCollection, where("ownerId", "==", uid)); // Query where ownerId matches user's uid
     const querySnapshot = await getDocs(q);
     const userListings = querySnapshot.docs.map((doc) => ({
@@ -49,6 +55,38 @@ function AccountPage() {
     setListings(userListings);
   };
 
+  // Mark listing as sold
+  const handleMarkAsSold = async (listingId) => {
+    try {
+      const listingRef = doc(db, "listings", listingId);
+      await updateDoc(listingRef, { status: "sold" });
+      setPopupMessage("Listing marked as sold!");
+      setPopupVisible(true);
+      await fetchUserListings(user.uid);
+    } catch (error) {
+      console.error("Error marking listing as sold", error);
+    }
+  };
+
+  // Remove listing
+  const handleRemoveListing = async (listingId) => {
+    try {
+      const listingRef = doc(db, "listings", listingId);
+      await deleteDoc(listingRef);
+      setPopupMessage("Listing removed!");
+      setPopupVisible(true);
+      await fetchUserListings(user.uid);
+    } catch (error) {
+      console.error("Error removing listing", error);
+    }
+  };
+
+  // Edit listing
+  const handleEditListing = (listingId) => {
+    navigate(`/edit-listing/${listingId}`);
+  };
+
+  // display user data
   useEffect(() => {
     const listener = auth.onAuthStateChanged(async (authUser) => {
       if (authUser) {
@@ -66,34 +104,6 @@ function AccountPage() {
   if (loading) {
     return <p>Loading...</p>;
   }
-
-  const handleMarkAsSold = async (listingId) => {
-    try {
-      const listingRef = doc(db, "listings", listingId);
-      await updateDoc(listingRef, { status: "sold" });
-      setPopupMessage("Listing marked as sold!");
-      setPopupVisible(true);
-      await fetchUserListings(user.uid);
-    } catch (error) {
-      console.error("Error marking listing as sold", error);
-    }
-  };
-
-  const handleRemoveListing = async (listingId) => {
-    try {
-      const listingRef = doc(db, "listings", listingId);
-      await deleteDoc(listingRef);
-      setPopupMessage("Listing removed!");
-      setPopupVisible(true);
-      await fetchUserListings(user.uid);
-    } catch (error) {
-      console.error("Error removing listing", error);
-    }
-  };
-
-  const handleEditListing = (listingId) => {
-    navigate(`/edit-listing/${listingId}`);
-  };
 
   return (
     <div>

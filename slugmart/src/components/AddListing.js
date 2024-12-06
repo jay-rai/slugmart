@@ -16,12 +16,16 @@ import {
   beforeImage,
   afterImage,
   selectThumbnail,
+  onlyNumbers,
+  setLetterLimit,
+  validatePaste
 } from "./AddEditListingHelpers";
 import DragItem from "./DragItem";
 import Popup from "./Popup";
 import "./AddEditListing.css";
 
 function AddListing() {
+  // store the listing data in state variables
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -29,10 +33,13 @@ function AddListing() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
+  // carousel state variables
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  // popup state variable
   const [popupVisible, setPopupVisible] = useState(false);
-
+  // list of categories
   const listCategories = [
     "Books",
     "Clothing, Shoes, & Accessories",
@@ -48,9 +55,10 @@ function AddListing() {
     "Antiques",
     "Computers/Tablets",
   ];
-  const [condition, setCondition] = useState("");
+  // useNavigate hook to navigate to a different page
   const navigate = useNavigate();
 
+  // Dropzone hook to handle file uploads
   // https://react-dropzone.js.org/
   // https://stackoverflow.com/questions/53272513/async-image-gallery-in-react
   const { getRootProps, getInputProps } = useDropzone({
@@ -82,6 +90,7 @@ function AddListing() {
     },
   });
 
+  // form submission
   const handleListingSubmit = async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
@@ -123,6 +132,7 @@ function AddListing() {
       });
     }
 
+    // Add listing to Firestore
     const listingRef = doc(db, "listings", `${Date.now()}_${user.uid}`);
     await setDoc(listingRef, {
       title,
@@ -141,6 +151,7 @@ function AddListing() {
       navigate("/browse");
     }, 3000); // Redirect after 3 seconds
   };
+
   return (
     <div>
       <Navbar handleLogout={handleLogout(navigate)} />
@@ -253,7 +264,11 @@ function AddListing() {
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 60);
+                setTitle(value.trimStart());
+              }}
+              onKeyDown={(e) => setLetterLimit(e, title, 60)}
               className="form-input"
               required
             />
@@ -265,9 +280,11 @@ function AddListing() {
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              onKeyDown={(e) => onlyNumbers(e, price)}
+              onPaste={(e) => validatePaste(e, setPrice, price)}
               className="form-input"
               required
-              max="1000000"
+              min="0"
             />
           </div>
 
@@ -275,7 +292,11 @@ function AddListing() {
             <label className="form-label">Description:</label>
             <textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 400);
+                setDescription(value.trimStart());
+              }}
+              onKeyDown={(e) => setLetterLimit(e, title, 400)}
               className="form-input"
               required
             />
@@ -327,7 +348,14 @@ function AddListing() {
               Other
             </button>
           </div>
-          <button type="submit" className="submit-button">
+          <button
+            type="submit"
+            className="submit-button"
+            onClick={(e) => {
+              setTitle(title.trim());
+              setDescription(description.trim());
+            }}
+          >
             {uploading ? "Uploading..." : "Update Listing"}
           </button>
         </form>
