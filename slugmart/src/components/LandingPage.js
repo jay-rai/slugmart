@@ -15,21 +15,26 @@ function LandingPage() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = () => {
+    // Directly call the function within the event handler to ensure it's synchronous
     const authProvider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, authProvider);
-      const user = result.user;
-      if (user.email.endsWith("@ucsc.edu")) {
-        addUserToDatabase(user);
-        setUser(user);
-      } else {
-        console.log("User not from ucsc");
-        navigate("/bad-email");
-      }
-    } catch (error) {
-      console.error("Error Signing in: ", error);
-    }
+    signInWithPopup(auth, authProvider)
+      .then((result) => {
+        const user = result.user;
+        if (user.email.endsWith("@ucsc.edu")) {
+          addUserToDatabase(user);
+          setUser(user);
+        } else {
+          console.log("User not from ucsc");
+          navigate("/bad-email");
+        }
+      })
+      .catch((error) => {
+        console.error("Error Signing in: ", error);
+        if (error.code === "auth/popup-closed-by-user") {
+          alert("Sign-in popup was closed. Please try again.");
+        }
+      });
   };
 
   const addUserToDatabase = async (user) => {
